@@ -60,8 +60,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'photoapp',
-        'USER': 'myuser',
-        'PASSWORD': 'password',
+        'USER': 'django',
+        'PASSWORD': 'djangopass',
         'HOST': 'localhost',
         'PORT': '',
     }
