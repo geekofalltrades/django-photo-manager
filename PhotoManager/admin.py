@@ -11,9 +11,9 @@ class PhotoAdmin(admin.ModelAdmin):
 
 
 class AlbumAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('__unicode__', 'timestamp', 'description', 'author')
 
 
 admin.site.register(Tag)
 admin.site.register(Photo)
-admin.site.register(Album)
+admin.site.register(Album, AlbumAdmin)
