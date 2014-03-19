@@ -19,8 +19,8 @@ class Photo(models.Model):
     """
     title = models.TextField(max_length=64, default='Untitled')
     timestamp = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag, blank=True)
-    description = models.TextField()
+    tags = models.ManyToManyField(Tag, blank=True, null=True)
+    description = models.TextField(blank=True)
     author = models.ForeignKey(User)
 
     def __unicode__(self):
@@ -32,9 +32,9 @@ class Album(models.Model):
     not need to be unique to this album.
     """
     title = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    photos = models.ManyToManyField(Photo, blank=True)
+    photos = models.ManyToManyField(Photo, blank=True, null=True)
     author = models.ForeignKey(User)
 
     def __unicode__(self):
