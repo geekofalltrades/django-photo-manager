@@ -14,7 +14,7 @@ class TestTagModel(TestCase):
         tag.save()
         self.assertIsInstance(tag, Tag)
         self.assertEqual(tag.text, 'Test Tag')
-        self.assertIsInstance(tag.timestamp, datetime)
+        self.assertIsInstance(tag.date_created, datetime)
 
     def test_create_tag_without_text(self):
         """Try to create a tag with no text and assert that the operation
@@ -35,29 +35,25 @@ class TestPhotoModel(TestCase):
         photo = Photo(
             author=self.u,
             description='A Photo',
-            title='A Title'
+
         )
         photo.full_clean()
         photo.save()
         self.assertIsInstance(photo, Photo)
-        self.assertIsInstance(photo.timestamp, datetime)
-        self.assertEqual(photo.title, 'A Title')
+        self.assertIsInstance(photo.date_created, datetime)
+        self.assertIsInstance(photo.date_modified, datetime)
         self.assertEqual(photo.description, 'A Photo')
         self.assertEqual(photo.author, self.u)
 
-    def test_default_photo_title(self):
-        """Create a photo with no title and assert that its title appears
-        as 'Untitled.'
-        """
-        photo = Photo(
-            author=self.u
-        )
-        photo.full_clean()
-        photo.save()
-        self.assertEqual(photo.title, 'Untitled')
-
     def test_create_photo_without_author(self):
         """Attempt to create a photo without an author and verify that
+        the operation raises a ValidationError.
+        """
+        photo = Photo()
+        self.assertRaises(ValidationError, photo.full_clean)
+
+    def test_create_photo_without_image(self):
+        """Attempt to create a photo without an image and verify that
         the operation raises a ValidationError.
         """
         photo = Photo()
@@ -100,7 +96,8 @@ class TestAlbumModel(TestCase):
         album.full_clean()
         album.save()
         self.assertIsInstance(album, Album)
-        self.assertIsInstance(album.timestamp, datetime)
+        self.assertIsInstance(album.date_created, datetime)
+        self.assertIsInstance(album.date_modified, datetime)
         self.assertEqual(album.title, 'An Album')
         self.assertEqual(album.description, 'A Description')
         self.assertEqual(album.author, self.u)
