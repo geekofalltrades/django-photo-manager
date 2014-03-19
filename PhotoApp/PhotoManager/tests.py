@@ -1,3 +1,14 @@
 from django.test import TestCase
+from models import Tag, Photo, Album
 
-# Create your tests here.
+
+class TestTagModel(TestCase):
+    pass
+
+
+class TestPhotoModel(TestCase):
+    pass
+
+
+class TestAlbumModel(TestCase):
+    pass
