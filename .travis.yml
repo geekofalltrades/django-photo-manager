@@ -6,6 +6,7 @@ install: "pip install -r requirements.txt"
 services: postgresql
 before_script:
  - psql -U postgres -c "CREATE USER django WITH PASSWORD 'djangopass' SUPERUSER;"
+ - createdb photoapp
  - cd PhotoApp
 # command to run tests
 script: python manage.py test
