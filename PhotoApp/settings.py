@@ -86,3 +86,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = '/home/geekofalltrades/Documents/CodeFellows/DjangoApp/media'
+MEDIA_URL = '/media/'

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.core.files import File
 from django.contrib.auth.models import User
 from datetime import datetime
 from models import Tag, Photo, Album
@@ -29,13 +30,14 @@ class TestPhotoModel(TestCase):
     def setUp(self):
         self.u = User(username='admin', password='password')
         self.u.save()
+        self.image = File(open('test_image.jpg'))
 
     def test_create_photo(self):
         """Create a photo and assert that its fields appear as expected."""
         photo = Photo(
             author=self.u,
             description='A Photo',
-
+            image=self.image
         )
         photo.full_clean()
         photo.save()
