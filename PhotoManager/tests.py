@@ -2,8 +2,11 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.contrib.auth.models import User
+from django.conf import settings
 from datetime import datetime
 from models import Tag, Photo, Album
+from shutil import rmtree
+import os
 
 
 class TestTagModel(TestCase):
@@ -32,6 +35,13 @@ class TestPhotoModel(TestCase):
         self.u.save()
         self.image = File(open('test_image.jpg'))
 
+    def tearDown(self):
+        """After each test, remove the image file uploaded."""
+        rmtree(
+            os.path.join(settings.MEDIA_ROOT, str(self.u.pk)),
+            ignore_errors=True
+        )
+
     def test_create_photo(self):
         """Create a photo and assert that its fields appear as expected."""
         photo = Photo(
@@ -51,14 +61,14 @@ class TestPhotoModel(TestCase):
         """Attempt to create a photo without an author and verify that
         the operation raises a ValidationError.
         """
-        photo = Photo()
+        photo = Photo(image=self.image)
         self.assertRaises(ValidationError, photo.full_clean)
 
     def test_create_photo_without_image(self):
         """Attempt to create a photo without an image and verify that
         the operation raises a ValidationError.
         """
-        photo = Photo()
+        photo = Photo(author=self.u)
         self.assertRaises(ValidationError, photo.full_clean)
 
     def test_create_photo_with_tags(self):
@@ -72,7 +82,7 @@ class TestPhotoModel(TestCase):
         t3 = Tag(text="Tag 3")
         t3.save()
 
-        photo = Photo(author=self.u)
+        photo = Photo(author=self.u, image=self.image)
         photo.save()
         photo.tags.add(t1, t2, t3)
         photo.save()

@@ -87,5 +87,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = '/home/geekofalltrades/Documents/CodeFellows/DjangoApp/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = '/home/geekofalltrades/Documents/CodeFellows/DjangoApp/media'
 MEDIA_URL = '/media/'

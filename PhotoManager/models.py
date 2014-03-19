@@ -19,7 +19,7 @@ def set_upload_to(instance, filename):
     gives each user a folder while avoiding the problem of usernames that
     contain characters that can't go in file/folder names.
     """
-    return '/%d/%s' % (instance.author.pk, filename)
+    return '%d/%s' % (instance.author.pk, filename)
 
 
 class Photo(models.Model):
