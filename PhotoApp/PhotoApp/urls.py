@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'PhotoApp.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^pm/', include('PhotoManager.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
