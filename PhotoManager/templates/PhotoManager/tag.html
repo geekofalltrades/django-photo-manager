@@ -1,0 +1,7 @@
+{% block body %}
+{% if user %}
+<p>Logged in as {{ user.username }} - Log Out</p>
+{% else %}
+<p>Not logged in - Log In</p>
+{% endif %}
+{% endblock %}
