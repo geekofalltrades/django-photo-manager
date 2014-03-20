@@ -34,7 +34,7 @@ class Photo(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return self.title
+        return self.image.name
 
 
 class Album(models.Model):
