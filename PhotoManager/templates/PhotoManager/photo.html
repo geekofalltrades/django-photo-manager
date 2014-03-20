@@ -1,7 +1,15 @@
+{% extends "base.html" %}
 {% block body %}
-{% if user %}
-<p>Logged in as {{ user.username }} - Log Out</p>
-{% else %}
-<p>Not logged in - Log In</p>
-{% endif %}
+<div class="photo">
+    <img src={{ image.filename }}></img>
+    {% if image.description %}
+    <p>{{ image.description }}</p>
+    {% endif %}
+    {% if photo.album %}
+    <a id="prevlink" href="photo/{{ photo.album.last }}">Previous Photo</a>
+    <a id="albumlink" href="album/{{ photo.album.pk }}">Back to Album</a>
+    <a id="nextlink" href="photo/{{ photo.album.last }}">Next Photo</a>
+    {% endif %}
+</div>
+<a id="homelink" href="home/">Home</a>
 {% endblock %}

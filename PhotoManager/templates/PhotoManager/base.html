@@ -3,6 +3,15 @@
     <title>Photo Manager</title>
 </head>
 <body>
+{% block login_status %}
+<div class="loginstatus">
+{% if user %}
+    <p>Logged in as {{ user.username }} - <a href="logout/">Log Out</a></p>
+{% else %}
+    <p>Not logged in - <a href="login/">Log In</a> or <a href="register/">Register</a></p>
+{% endif %}
+</div>
+{% endblock %}
 {% block body %}{% endblock %}
 </body>
 </html>

@@ -1,7 +1,15 @@
+{% extends "base.html" %}
 {% block body %}
-{% if user %}
-<p>Logged in as {{ user.username }} - Log Out</p>
+<div class="albums">
+{% if albums %}
+{% for album in albums %}
+    <div class="album">
+        <h3><a href="albums/{{ album.pk }}">{{ album.title }}</a></h3>
+        <!-- <img src={{ album.cover }}></img> -->
+        <p>{{ album.description }}</p>
+    </div>
 {% else %}
-<p>Not logged in - Log In</p>
+<p>You don't have any albums yet - would you like to <a href="create/">create one?</a></p>
 {% endif %}
+</div>
 {% endblock %}
