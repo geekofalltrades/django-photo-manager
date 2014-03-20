@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from models import Tag, Photo, Album
 from django.forms import ModelForm
+#from django.http import HttpResponse
+from models import Tag, Photo, Album
 
 
 class TagForm(ModelForm):
@@ -21,29 +22,29 @@ class AlbumForm(ModelForm):
         fields = ['title', 'description', 'photos']
 
 
-def frontpage_view():
+def frontpage_view(request):
+    return render(request, 'frontpage.html')
+
+
+def home_view(request):
     pass
 
 
-def home_view():
+def album_view(request):
     pass
 
 
-def album_view():
+def photo_view(request):
     pass
 
 
-def photo_view():
+def tag_view(request):
     pass
 
 
-def tag_view():
+def login_view(request):
     pass
 
 
-def login_view():
-    pass
-
-
-def logout_view():
+def logout_view(request):
     pass
