@@ -5,8 +5,8 @@
 <body>
 {% block login_status %}
 <div class="loginstatus">
-{% if user %}
-    <p>Logged in as {{ user.username }} - <a href="logout/">Log Out</a></p>
+{% if request.user %}
+    <p>Logged in as {{ request.user.username }} - <a href="logout/">Log Out</a></p>
 {% else %}
     <p>Not logged in - <a href="login/">Log In</a> or <a href="register/">Register</a></p>
 {% endif %}
