@@ -24,30 +24,66 @@ class AlbumForm(ModelForm):
 
 
 def frontpage_view(request):
+    """View the front page of the website.
+    Displays welcome text and links that prompt the user to either login
+    or register.
+    """
     return render(request, 'PhotoManager/frontpage.html')
 
 
 def home_view(request):
+    """View the home page.
+    Shows a list of the user's albums with title and description.
+    """
     albums = Album.objects.filter(author__exact=request.user.pk)
     context = {'albums': albums}
     return render(request, 'PhotoManager/homepage.html', context)
 
 
 def album_view(request, id):
+    """View a single album.
+    Shows thumbnails of the photos in the album, plus the album's title
+    and description, if any.
+    """
     return render(request, 'PhotoManager/album.html')
 
 
 def photo_view(request, id):
+    """View a single photo.
+    Shows the photo, its description (if any), and its tags (if any),
+    and allow the user the opportunity to add new tags, including the
+    ability to create a completely new tag.
+    """
     return render(request, 'PhotoManager/photo.html')
 
 
 def tag_view(request, id):
+    """View a list of photos represented by a certain tag.
+    Shows thumbnails of the photos with a certain tag applied, which link
+    to that photo's page.
+    """
     return render(request, 'PhotoManager/tag.html')
 
 
-def login_view(request):
-    return HttpResponseRedirect(reverse('PhotoManager:pm-home'))
+def create_album_view(request):
+    """View that allows users to create an album.
+    Presents the user with a form allowing them to initialize album
+    details.
+    """
+    return render(request, 'PhotoManager/create_album.html')
 
 
-def logout_view(request):
-    return HttpResponseRedirect(reverse('PhotoManager:pm-front'))
+def add_view(request):
+    """View that allows users to add a photo to an album.
+    Presents the user with a form allowing them to select additional photos
+    for the given album.
+    """
+    return render(request, 'PhotoManager/add.html')
+
+
+def create_tag_view(request):
+    """View submitted to when the user creates a new tag.
+    Creates a new tag, then redirects the user to the page from which
+    they came.
+    """
+    return HttpResponseRedirect(reverse('page_user_came_from'))

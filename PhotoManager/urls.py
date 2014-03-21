@@ -7,6 +7,4 @@ urlpatterns = patterns(
     url(r'^album/(?P<id>\d+)$', 'album_view', name='pm-album'),
     url(r'^photo/(?P<id>\d+)$', 'photo_view', name='pm-photo'),
     url(r'^tag/(?P<id>\d+)$', 'tag_view', name='pm-tag'),
-    url(r'^login/$', 'login_view', name='pm-login'),
-    url(r'^logout/$', 'logout_view', name='pm-logout'),
 )
