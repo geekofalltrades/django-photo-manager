@@ -35,7 +35,8 @@ def home_view(request):
     """View the home page.
     Shows a list of the user's albums with title and description.
     """
-    albums = Album.objects.filter(author__exact=request.user.pk)
+    albums = Album.objects.\
+        filter(author__exact=request.user.pk).order_by('-date_created')
     context = {'albums': albums}
     return render(request, 'PhotoManager/homepage.html', context)
 
@@ -45,7 +46,9 @@ def album_view(request, id):
     Shows thumbnails of the photos in the album, plus the album's title
     and description, if any.
     """
-    return render(request, 'PhotoManager/album.html')
+    album = Album.objects.filter(id__exact=id)
+    context = {'album': album}
+    return render(request, 'PhotoManager/album.html', context)
 
 
 def photo_view(request, id):
@@ -54,7 +57,9 @@ def photo_view(request, id):
     and allow the user the opportunity to add new tags, including the
     ability to create a completely new tag.
     """
-    return render(request, 'PhotoManager/photo.html')
+    photo = Photo.objects.filter(id__exact=id)
+    context = {'photo': photo}
+    return render(request, 'PhotoManager/photo.html', context)
 
 
 def tag_view(request, id):
@@ -62,7 +67,9 @@ def tag_view(request, id):
     Shows thumbnails of the photos with a certain tag applied, which link
     to that photo's page.
     """
-    return render(request, 'PhotoManager/tag.html')
+    photos = Photo.objects.filter(tags__id__exact=id)
+    context = {'photos': photos}
+    return render(request, 'PhotoManager/tag.html', context)
 
 
 def create_album_view(request):
