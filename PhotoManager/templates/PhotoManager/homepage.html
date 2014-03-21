@@ -4,13 +4,13 @@
 {% if albums %}
 {% for album in albums %}
     <div class="album">
-        <h3><a href="albums/{{ album.pk }}">{{ album.title }}</a></h3>
+        <h3><a href="{% url 'PhotoManager.views.album_view' id=album.pk %}">{{ album.title }}</a></h3>
         <!-- <img src={{ album.cover }}></img> -->
         <p>{{ album.description }}</p>
     </div>
 {% endfor %}
 {% else %}
-<p>You don't have any albums yet - would you like to <a href="create/">create one?</a></p>
+<p>You don't have any albums yet - would you like to <a href="{% url 'PhotoManager.views.create_view' id=album.pk %}">create one?</a></p>
 {% endif %}
 </div>
 {% endblock %}
