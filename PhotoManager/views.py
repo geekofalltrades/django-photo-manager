@@ -28,7 +28,9 @@ def frontpage_view(request):
 
 
 def home_view(request):
-    return render(request, 'PhotoManager/homepage.html')
+    albums = Album.objects.filter(author__exactly=request.user.pk)
+    context = {'albums': albums}
+    return render(request, 'PhotoManager/homepage.html', context)
 
 
 def album_view(request, id):
