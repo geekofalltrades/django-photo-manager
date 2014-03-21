@@ -77,7 +77,12 @@ def create_album_view(request):
     Presents the user with a form allowing them to initialize album
     details.
     """
-    return render(request, 'PhotoManager/create_album.html')
+    if request.method == 'POST':
+        form = AlbumForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('PhotoManager:pm-album', args=))
+    else:
+        return render(request, 'PhotoManager/create_album.html')
 
 
 def add_view(request):
