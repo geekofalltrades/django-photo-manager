@@ -93,3 +93,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #MEDIA_ROOT = '/home/geekofalltrades/Documents/CodeFellows/DjangoApp/media'
 MEDIA_URL = '/media/'
+
+#django-registration settings
+
+ACCOUNT_ACTIVATION_DAYS = 1
