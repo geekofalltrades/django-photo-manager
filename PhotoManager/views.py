@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.forms import ModelForm
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from models import Tag, Photo, Album
 
 
@@ -26,24 +28,24 @@ def frontpage_view(request):
 
 
 def home_view(request):
-    pass
+    return render(request, 'PhotoManager/homepage.html')
 
 
-def album_view(request):
-    pass
+def album_view(request, id):
+    return render(request, 'PhotoManager/album.html')
 
 
-def photo_view(request):
-    pass
+def photo_view(request, id):
+    return render(request, 'PhotoManager/photo.html')
 
 
-def tag_view(request):
-    pass
+def tag_view(request, id):
+    return render(request, 'PhotoManager/tag.html')
 
 
 def login_view(request):
-    pass
+    return HttpResponseRedirect(reverse('PhotoManager:pm-home'))
 
 
 def logout_view(request):
-    pass
+    return HttpResponseRedirect(reverse('PhotoManager:pm-front'))
