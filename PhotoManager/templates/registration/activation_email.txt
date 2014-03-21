@@ -1,0 +1,8 @@
+Thanks for registering an account with Photo Manager. Before you can begin using your new account, you need to confirm your registration.
+To confirm, simply click the following link:
+
+{{ site.domain }}/account/activate/{{ activation_key }}
+
+You have {{ expiration_days }} {% if expiration_days > 1 %}days{% else %}day{% endif %} to complete this action.
+
+If you did not register for a Photo Manager account, you may safely ignore this email.
