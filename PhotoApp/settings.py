@@ -97,3 +97,12 @@ MEDIA_URL = '/media/'
 #django-registration settings
 
 ACCOUNT_ACTIVATION_DAYS = 1
+
+#cache settings
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
