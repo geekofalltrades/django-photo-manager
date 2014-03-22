@@ -1,7 +1,7 @@
 {% extends "PhotoManager/base.html" %}
 {% block body %}
 <div class="photo">
-    <img src={{ image.filename }}></img>
+    <img src="{{ photo.image }}"></img>
     {% if image.description %}
     <p>{{ image.description }}</p>
     {% endif %}

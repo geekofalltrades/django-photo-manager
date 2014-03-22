@@ -1,4 +1,10 @@
 {% extends "PhotoManager/base.html" %}
 {% block body %}
+{% load thumbnail %}
+{% for photo in photos %}
+{% thumbnail photo.image "100x100" as im %}
+<a href="{% url 'PhotoManger.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+{% endthumbnail %}
+{% endfor %}
 
 {% endblock %}

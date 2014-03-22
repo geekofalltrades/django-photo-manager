@@ -1,11 +1,14 @@
 {% extends "PhotoManager/base.html" %}
 {% block body %}
+{% load thumbnail %}
 <div class="albums">
 {% if albums %}
 {% for album in albums %}
     <div class="album">
         <h3><a href="{% url 'PhotoManager.views.album_view' id=album.pk %}">{{ album.title }}</a></h3>
-        <!-- <img src={{ album.cover }}></img> -->
+        {% thumbnail album.photos[0].image "100x100" as im %}
+        <a href="{% url 'PhotoManger.views.album_view' id=album.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+        {% endthumbnail %}
         <p>{{ album.description }}</p>
     </div>
 {% endfor %}
