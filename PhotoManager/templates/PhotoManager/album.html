@@ -1,4 +1,11 @@
 {% extends "PhotoManager/base.html" %}
 {% block body %}
-
+<div class="album">
+    <h1>{{ album.title }}</h1>
+    <p>{{ album.description }}</p>
+    {% for photo in album.photos %}
+        <!-- display a thumbnail for each photo that links to that photo -->
+    {% endfor %}
+</div>
+<a href={% url 'PhotoManager.views.home_view' %}>Return Home</a>
 {% endblock %}

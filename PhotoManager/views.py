@@ -131,8 +131,9 @@ def modify_view(request, id):
 
 
 def create_tag_view(request):
-    """View that allows the user to create a new tag. This view is reached
-    from the photo view, and so redirects to the last photo viewed.
+    """View that allows the user to create a new tag.
+    This view is reached from the photo view, and so redirects to the
+    last photo viewed.
     """
     form = TagForm(request.POST)
     photo = Photo.objects.get(pk=request.POST['photo'])
