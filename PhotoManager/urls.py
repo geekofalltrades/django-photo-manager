@@ -8,6 +8,5 @@ urlpatterns = patterns(
     url(r'^photo/(?P<id>\d+)$', 'photo_view', name='pm-photo'),
     url(r'^tag/(?P<id>\d+)$', 'tag_view', name='pm-tag'),
     url(r'^create/$', 'create_album_view', name='pm-create'),
-    url(r'^add/(?P<id>\d+)$', 'add_view', name='pm-add'),
-    url(r'^create_tag/$', 'create_tag_view', name='pm-create-tag'),
+    url(r'^modify/(?P<id>\d+)$', 'modify_view', name='pm-modify'),
 )

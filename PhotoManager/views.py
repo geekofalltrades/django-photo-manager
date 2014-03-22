@@ -17,6 +17,12 @@ class PhotoForm(ModelForm):
         fields = ['image', 'description', 'tags']
 
 
+class TagPhotoForm(ModelForm):
+    class Meta(object):
+        model = Photo
+        fields = ['tags']
+
+
 class AlbumForm(ModelForm):
     class Meta(object):
         model = Album
@@ -46,7 +52,7 @@ def album_view(request, id):
     Shows thumbnails of the photos in the album, plus the album's title
     and description, if any.
     """
-    album = Album.objects.filter(id__exact=id)
+    album = Album.objects.get(pk=id)
     context = {'album': album}
     return render(request, 'PhotoManager/album.html', context)
 
@@ -55,10 +61,25 @@ def photo_view(request, id):
     """View a single photo.
     Shows the photo, its description (if any), and its tags (if any),
     and allow the user the opportunity to add new tags, including the
-    ability to create a completely new tag.
+    ability to create a completely new tag. A POST to this page signifies
+    that the user is adding a tag to this photo.
     """
-    photo = Photo.objects.filter(id__exact=id)
-    context = {'photo': photo}
+    photo = Photo.objects.get(pk=id)
+    tag_form = TagPhotoForm(instance=photo)
+    create_form = TagForm()
+
+    if request.method == 'POST':
+        tag_form = TagPhotoForm(request.POST, instance=photo)
+        if tag_form.is_valid():
+            tag_form.save()
+            return HttpResponseRedirect(
+                reverse('PhotoManager:pm-photo', args=[photo.pk]))
+
+    context = {
+        'photo': photo,
+        'tag_form': tag_form,
+        'create_form': create_form,
+    }
     return render(request, 'PhotoManager/photo.html', context)
 
 
@@ -90,17 +111,33 @@ def create_album_view(request):
     return render(request, 'PhotoManager/create_album.html', context)
 
 
-def add_view(request, id):
-    """View that allows users to add a photo to an album.
-    Presents the user with a form allowing them to select additional photos
-    for the given album.
+def modify_view(request, id):
+    """View that allows users to modify an album.
+    Presents the user with a form allowing them to change the title or
+    description or add or remove photos.
     """
-    return render(request, 'PhotoManager/add.html')
+    album = Album.objects.get(pk=id)
+    if request.method == 'POST':
+        form = AlbumForm(request.POST, instance=album)
+        if form.is_valid():
+            new_album = form.save()
+            return HttpResponseRedirect(
+                reverse('PhotoManager:pm-album', args=[new_album.pk]))
+    else:
+        form = AlbumForm(instance=album)
+
+    context = {'form': form}
+    return render(request, 'PhotoManager/modify.html', context)
 
 
 def create_tag_view(request):
-    """View submitted to when the user creates a new tag.
-    Creates a new tag, then redirects the user to the page from which
-    they came.
+    """View that allows the user to create a new tag. This view is reached
+    from the photo view, and so redirects to the last photo viewed.
     """
-    return HttpResponseRedirect(reverse('page_user_came_from'))
+    form = TagForm(request.POST)
+    photo = Photo.objects.get(pk=request.POST['photo'])
+    if form.is_valid():
+        new_tag = form.save()
+        photo.tags.add(new_tag)
+
+    return HttpResponseRedirect('PhotoManger:pm-photo', args=[photo.pk])
