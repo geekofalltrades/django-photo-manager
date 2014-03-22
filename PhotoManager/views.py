@@ -80,12 +80,17 @@ def create_album_view(request):
     if request.method == 'POST':
         form = AlbumForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect(reverse('PhotoManager:pm-album', args=))
+            new_album = form.save()
+            return HttpResponseRedirect(
+                reverse('PhotoManager:pm-album', args=[new_album.pk]))
     else:
-        return render(request, 'PhotoManager/create_album.html')
+        form = AlbumForm()
+
+    context = {'form': form}
+    return render(request, 'PhotoManager/create_album.html', context)
 
 
-def add_view(request):
+def add_view(request, id):
     """View that allows users to add a photo to an album.
     Presents the user with a form allowing them to select additional photos
     for the given album.
