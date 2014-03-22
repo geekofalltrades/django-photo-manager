@@ -1,4 +1,5 @@
 from django.db import models
+from sorl.thumbnail import ImageField
 from django.contrib.auth.models import User
 
 
@@ -26,7 +27,7 @@ class Photo(models.Model):
     """An individual photograph. This photo may exist in many albums and
     have many tags.
     """
-    image = models.ImageField(upload_to=set_upload_to)
+    image = ImageField(upload_to=set_upload_to)
     description = models.TextField(blank=True)
     author = models.ForeignKey(User)
     tags = models.ManyToManyField(Tag, blank=True, null=True)
