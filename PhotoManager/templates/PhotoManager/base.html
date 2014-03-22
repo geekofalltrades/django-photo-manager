@@ -3,6 +3,7 @@
     <title>Photo Manager</title>
 </head>
 <body>
+
 {% block login_status %}
 <div class="loginstatus">
 {% if request.user %}
@@ -12,6 +13,8 @@
 {% endif %}
 </div>
 {% endblock %}
+
 {% block body %}{% endblock %}
+
 </body>
 </html>
