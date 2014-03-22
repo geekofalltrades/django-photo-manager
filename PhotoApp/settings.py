@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'south',
     'storages',
     'registration',
+    'sorl.thumbnail',
     'PhotoManager',
 )
 
