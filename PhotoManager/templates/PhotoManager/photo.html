@@ -2,9 +2,13 @@
 {% block body %}
 <div class="photo">
     <img src="{{ photo.image.url }}"></img>
-    {% if image.description %}
-    <p>{{ image.description }}</p>
-    {% endif %}
+    <p>Description: {{ photo.description }}</p>
+    <p>Tags:</p>
+    <ul class="tags">
+    {% for tag in photo.tags.all %}
+        <li><a href="{% url 'PhotoManager.views.tag_view' id=tag.pk %}">{{ tag.text }}</a></li>
+    {% endfor %}
+    </ul>
     <!-- <a id="prevlink" href="photo/{{ photo.album.last }}">Previous Photo</a> -->
     <a id="albumlink" href="{% url 'PhotoManager.views.album_view' id=photo.album_set.all.0.pk %}">Back to Album</a>
     <!-- <a id="nextlink" href="photo/{{ photo.album.last }}">Next Photo</a> -->
