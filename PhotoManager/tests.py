@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.test.client import Client
 from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.contrib.auth.models import User
@@ -158,7 +159,11 @@ class TestFrontView(TestCase):
     The front view simply displays a title and slogan and the option to
     log in or register.
     """
-    pass
+    def setUp(self):
+        self.client = Client()
+
+    def test_front_page_view(self):
+        """Test that the front page appears as it should."""
 
 
 class TestHomeView(TestCase):
@@ -166,7 +171,14 @@ class TestHomeView(TestCase):
     The home page displays the albums belonging to the user who is logged
     in.
     """
-    pass
+    def setUp(self):
+        self.client = Client()
+
+    def test_home_page_view(self):
+        """Test that the home page appears as it should. Eventually these
+        tests will expand to cover changes made when authentication is
+        implemented.
+        """
 
 
 class TestTagView(TestCase):
@@ -175,7 +187,11 @@ class TestTagView(TestCase):
     beneath the title thumbnails of all photos which have that tag, each
     of which links to the photo view for that photo.
     """
-    pass
+    def setUp(self):
+        self.client = Client()
+
+    def test_tag_view(self):
+        """Test that the tag view appears as expected."""
 
 
 class TestAlbumView(TestCase):
@@ -183,7 +199,8 @@ class TestAlbumView(TestCase):
     The album view displays the title of the album, its description, and
     thumbnails of all photos in the album.
     """
-    pass
+    def test_album_view(self):
+        """Test that the album view appears as expected."""
 
 
 class TestPhotoView(TestCase):
@@ -192,4 +209,5 @@ class TestPhotoView(TestCase):
     tags, and a link back to the album that contains it, and a link back
     to the homepage.
     """
-    pass
+    def test_photo_view(self):
+        """Test that the photo view appears as expected."""
