@@ -254,6 +254,8 @@ class TestPhotoView(TestCase):
             author=self.user
         )
         self.photo.save()
+        self.album.photos.add(self.photo)
+        self.album.save()
         self.url = "/pm/photo/%s" % self.photo.pk
 
     def test_photo_view(self):

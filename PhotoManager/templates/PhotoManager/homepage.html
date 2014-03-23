@@ -13,7 +13,7 @@
     </div>
 {% endfor %}
 {% else %}
-<p>You don't have any albums yet - would you like to <a href="{% url 'PhotoManager.views.create_album_view' id=album.pk %}">create one?</a></p>
+<p>You don't have any albums yet - would you like to <a href="{% url 'PhotoManager.views.create_album_view' %}">create one?</a></p>
 {% endif %}
 </div>
 {% endblock %}
