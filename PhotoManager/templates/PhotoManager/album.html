@@ -4,9 +4,9 @@
 <div class="album">
     <h1>{{ album.title }}</h1>
     <p>{{ album.description }}</p>
-    {% for photo in album.photos %}
+    {% for photo in album.photos.all %}
     {% thumbnail photo.image "100x100" as im %}
-    <a href="{% url 'PhotoManger.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+    <a href="{% url 'PhotoManager.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
     {% endthumbnail %}
     {% endfor %}
 </div>

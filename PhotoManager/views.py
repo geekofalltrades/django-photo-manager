@@ -41,8 +41,9 @@ def home_view(request):
     """View the home page.
     Shows a list of the user's albums with title and description.
     """
-    albums = Album.objects.\
-        filter(author__exact=request.user.pk).order_by('-date_created')
+    # albums = Album.objects.\
+    #     filter(author__exact=request.user.pk).order_by('-date_created')
+    albums = Album.objects.all()
     context = {'albums': albums}
     return render(request, 'PhotoManager/homepage.html', context)
 
