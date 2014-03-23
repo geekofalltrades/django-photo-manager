@@ -7,5 +7,6 @@
 <a href="{% url 'PhotoManager.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
 {% endthumbnail %}
 {% endfor %}
+<a href={% url 'PhotoManager.views.home_view' %}>Return Home</a>
 
 {% endblock %}

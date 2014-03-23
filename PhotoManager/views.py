@@ -89,8 +89,9 @@ def tag_view(request, id):
     Shows thumbnails of the photos with a certain tag applied, which link
     to that photo's page.
     """
-    photos = Photo.objects.filter(tags__id__exact=id)
-    context = {'photos': photos}
+    tag = Tag.objects.get(id=id)
+    photos = Photo.objects.filter(tags__id=id)
+    context = {'photos': photos, 'tag': tag}
     return render(request, 'PhotoManager/tag.html', context)
 
 
