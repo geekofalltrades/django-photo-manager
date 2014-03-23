@@ -151,3 +151,45 @@ class TestAlbumModel(TestCase):
         self.assertIn(photo1, album.photos.all())
         self.assertIn(photo2, album.photos.all())
         self.assertIn(photo3, album.photos.all())
+
+
+class TestFrontView(TestCase):
+    """Test the front page view of the website.
+    The front view simply displays a title and slogan and the option to
+    log in or register.
+    """
+    pass
+
+
+class TestHomeView(TestCase):
+    """Test the homepage view.
+    The home page displays the albums belonging to the user who is logged
+    in.
+    """
+    pass
+
+
+class TestTagView(TestCase):
+    """Test the tag view.
+    The tag view displays a title declaring which tag is represented and
+    beneath the title thumbnails of all photos which have that tag, each
+    of which links to the photo view for that photo.
+    """
+    pass
+
+
+class TestAlbumView(TestCase):
+    """Test the album view.
+    The album view displays the title of the album, its description, and
+    thumbnails of all photos in the album.
+    """
+    pass
+
+
+class TestPhotoView(TestCase):
+    """Test the photo view.
+    The photo view displays the photo, its description, a list of its
+    tags, and a link back to the album that contains it, and a link back
+    to the homepage.
+    """
+    pass
