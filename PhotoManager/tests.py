@@ -161,9 +161,13 @@ class TestFrontView(TestCase):
     """
     def setUp(self):
         self.client = Client()
+        self.url = "/pm/"
 
     def test_front_page_view(self):
         """Test that the front page appears as it should."""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/frontpage.html')
 
 
 class TestHomeView(TestCase):
@@ -173,12 +177,16 @@ class TestHomeView(TestCase):
     """
     def setUp(self):
         self.client = Client()
+        self.url = "/pm/home/"
 
     def test_home_page_view(self):
         """Test that the home page appears as it should. Eventually these
         tests will expand to cover changes made when authentication is
         implemented.
         """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/homepage.html')
 
 
 class TestTagView(TestCase):
@@ -189,9 +197,16 @@ class TestTagView(TestCase):
     """
     def setUp(self):
         self.client = Client()
+        self.tag_text = "test_tag"
+        self.tag = Tag(text=self.tag_text)
+        self.tag.save()
+        self.url = "/pm/tag/%s" % self.tag.pk
 
     def test_tag_view(self):
         """Test that the tag view appears as expected."""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/tag.html')
 
 
 class TestAlbumView(TestCase):
@@ -199,8 +214,23 @@ class TestAlbumView(TestCase):
     The album view displays the title of the album, its description, and
     thumbnails of all photos in the album.
     """
+    def setUp(self):
+        self.client = Client()
+        self.user = User(username='django', password='djangopass')
+        self.user.save()
+        self.album = Album(
+            author=self.user,
+            title='Test Album',
+            description='Test Album Description'
+        )
+        self.album.save()
+        self.url = "/pm/album/%s" % self.album.pk
+
     def test_album_view(self):
         """Test that the album view appears as expected."""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/album.html')
 
 
 class TestPhotoView(TestCase):
@@ -209,5 +239,25 @@ class TestPhotoView(TestCase):
     tags, and a link back to the album that contains it, and a link back
     to the homepage.
     """
+    def setUp(self):
+        self.client = Client()
+        self.user = User(username='django', password='djangopass')
+        self.user.save()
+        self.album = Album(
+            author=self.user,
+            title='Test Album',
+            description='Test Album Description'
+        )
+        self.album.save()
+        self.photo = Photo(
+            image=File(open('test_image.jpg')),
+            author=self.user
+        )
+        self.photo.save()
+        self.url = "/pm/photo/%s" % self.photo.pk
+
     def test_photo_view(self):
         """Test that the photo view appears as expected."""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/photo.html')
