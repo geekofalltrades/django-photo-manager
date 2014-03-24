@@ -283,7 +283,7 @@ class TestAlbumView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Album', response.content)
         self.assertIn('Test Album Description', response.content)
-        #assert that there's a photo in here
+        self.assertIn('preview', response.content)
 
 
 class TestPhotoView(TestCase):

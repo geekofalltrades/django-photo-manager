@@ -6,7 +6,9 @@
     <p>{{ album.description }}</p>
     {% for photo in album.photos.all %}
     {% thumbnail photo.image "100x100" as im %}
+    <div class="preview">
     <a href="{% url 'PhotoManager.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+    </div>
     {% endthumbnail %}
     {% endfor %}
 </div>
