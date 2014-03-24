@@ -7,10 +7,10 @@
     {% for photo in album.photos.all %}
     {% thumbnail photo.image "100x100" as im %}
     <div class="preview">
-    <a href="{% url 'PhotoManager.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+    <a href="{% url 'PhotoManager:pm-photo' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
     </div>
     {% endthumbnail %}
     {% endfor %}
 </div>
-<a href={% url 'PhotoManager.views.home_view' %}>Return Home</a>
+<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}

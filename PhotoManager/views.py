@@ -103,7 +103,9 @@ def create_album_view(request):
     if request.method == 'POST':
         form = AlbumForm(request.POST)
         if form.is_valid():
-            new_album = form.save()
+            new_album = form.save(commit=False)
+            new_album.author = request.user
+            new_album.save()
             return HttpResponseRedirect(
                 reverse('PhotoManager:pm-album', args=[new_album.pk]))
     else:

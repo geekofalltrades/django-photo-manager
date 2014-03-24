@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'PhotoApp.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^pm/', include('PhotoManager.urls')),
+    url(r'^pm/', include('PhotoManager.urls', namespace='PhotoManager')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^account/', include('registration.backends.default.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

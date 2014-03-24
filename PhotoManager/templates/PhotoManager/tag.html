@@ -4,9 +4,9 @@
 <h1>Displaying photos with tag "{{ tag.text }}"</h1>
 {% for photo in photos %}
 {% thumbnail photo.image "100x100" as im %}
-<a href="{% url 'PhotoManager.views.photo_view' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+<a href="{% url 'PhotoManager:pm-photo' id=photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
 {% endthumbnail %}
 {% endfor %}
-<a href={% url 'PhotoManager.views.home_view' %}>Return Home</a>
+<a href={% url 'PhotoManager:pm-home' %}>Return Home</a>
 
 {% endblock %}

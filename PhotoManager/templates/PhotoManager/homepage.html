@@ -5,15 +5,15 @@
 {% if albums %}
 {% for album in albums %}
     <div class="album">
-        <h3><a href="{% url 'PhotoManager.views.album_view' id=album.pk %}">{{ album.title }}</a></h3>
+        <h3><a href="{% url 'PhotoManager:pm-album' id=album.pk %}">{{ album.title }}</a></h3>
         {% thumbnail album.photos.all.0.image "100x100" as im %}
-        <a href="{% url 'PhotoManager.views.album_view' id=album.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+        <a href="{% url 'PhotoManager:pm-album' id=album.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
         {% endthumbnail %}
         <p>{{ album.description }}</p>
     </div>
 {% endfor %}
 {% else %}
-<p>You don't have any albums yet - would you like to <a href="{% url 'PhotoManager.views.create_album_view' %}">create one?</a></p>
+<p>You don't have any albums yet - would you like to <a href="{% url 'PhotoManager:pm-create' %}">create one?</a></p>
 {% endif %}
 </div>
 {% endblock %}
