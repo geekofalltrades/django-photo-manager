@@ -9,9 +9,13 @@
         <li><a href="{% url 'PhotoManager:pm-tag' id=tag.pk %}">{{ tag.text }}</a></li>
     {% endfor %}
     </ul>
-    <!-- <a id="prevlink" href="photo/{{ photo.album.last }}">Previous Photo</a> -->
-    <a id="albumlink" href="{% url 'PhotoManager:pm-album' id=photo.album_set.all.0.pk %}">Back to Album</a>
-    <!-- <a id="nextlink" href="photo/{{ photo.album.last }}">Next Photo</a> -->
+    <p>Albums Containing This Photo:</p>
+    <ul class="albums">
+    {% for album in photo.album_set.all %}
+    <li><a href="{% url 'PhotoManager:pm-album' id=album.pk %}">{{ album.title }}</a></li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}">Modify Photo</a>
 </div>
-<a id="homelink" href="{% url 'PhotoManager:pm-home' %}">Home</a>
+<a href="{% url 'PhotoManager:pm-home' %}">Home</a>
 {% endblock %}
