@@ -118,7 +118,7 @@ def create_album_view(request):
     return render(request, 'PhotoManager/create_album.html', context)
 
 
-def modify_view(request, id):
+def modify_album_view(request, id):
     """View that allows users to modify an album.
     Presents the user with a form allowing them to change the title or
     description or add or remove photos.
@@ -137,15 +137,26 @@ def modify_view(request, id):
     return render(request, 'PhotoManager/modify.html', context)
 
 
+def create_photo_view(request):
+    """View that allows the user to create a new photo."""
+    pass
+
+
+def modify_photo_view(request, id):
+    """View that allows the user to modify a photo."""
+    pass
+
+
 def create_tag_view(request):
     """View that allows the user to create a new tag.
-    This view is reached from the photo view, and so redirects to the
-    last photo viewed.
+    This view is only reachable from modify_photo_view, and so redirects
+    there. Users do not have the power to modify existing tags.
     """
     form = TagForm(request.POST)
     photo = Photo.objects.get(pk=request.POST['photo'])
     if form.is_valid():
         new_tag = form.save()
         photo.tags.add(new_tag)
+        photo.save()
 
-    return HttpResponseRedirect('PhotoManger:pm-photo', args=[photo.pk])
+    return HttpResponseRedirect('PhotoManager:pm-photo', args=[photo.pk])
