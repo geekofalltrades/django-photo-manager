@@ -2,8 +2,11 @@ language: python
 python:
   - "2.7"
 # command to install dependencies
+before_install: sudo apt-get install -qq libjpeg8-dev
 install: "pip install -r requirements.txt"
-services: postgresql
+services:
+ - postgresql
+ - memcached
 before_script:
  - psql -U postgres -c "CREATE USER django WITH PASSWORD 'djangopass' SUPERUSER;"
  - createdb photoapp
