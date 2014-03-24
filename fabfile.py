@@ -126,12 +126,12 @@ def update():
     run_command_on_selected_server(_update)
 
 
-def _python_setup():
-    sudo('apt-get install python-all-dev python-setuptools python-pip libpq-dev')
+def _install_dependencies():
+    sudo('apt-get install python-all-dev python-setuptools python-pip libpq-dev zlib-dev libjpeg10-dev libmemcached-dev')
 
 
-def python_setup():
-    run_command_on_selected_server(_python_setup)
+def install_dependencies():
+    run_command_on_selected_server(_install_dependencies)
 
 
 def _install_python_reqs():
@@ -140,6 +140,8 @@ def _install_python_reqs():
 
 def _install_postgres():
     sudo('sudo apt-get install postgresql postgresql-contrib')
+    sudo('''psql -c "CREATE USER django WITH SUPERUSER PASSWORD 'djangopass';"''')
+    sudo('createdb photoapp')
 
 
 def install_postgres():
@@ -240,7 +242,7 @@ def _deploy():
 
 def setup():
     update()
-    python_setup()
+    install_dependencies()
     install_nginx()
     install_supervisor()
     install_postgres()
