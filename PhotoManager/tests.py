@@ -168,6 +168,8 @@ class TestFrontView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/frontpage.html')
+        self.assertIn('Log In', response.content)
+        self.assertIn('Register', response.content)
 
 
 class TestHomeView(TestCase):
@@ -187,6 +189,31 @@ class TestHomeView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/homepage.html')
+
+    def test_home_page_with_albums(self):
+        """If the logged in user has albums, assert that they appear on
+        the front page.
+        """
+        self.user = User(username='django', password='djangopass')
+        self.user.save()
+        self.album = Album(
+            author=self.user,
+            title='Test Album',
+            description='Test Album Description'
+        )
+        self.album.save()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test Album', response.content)
+        self.assertIn('Test Album Description', response.content)
+
+    def test_home_page_without_albums(self):
+        """If the logged in user does not have albums, assert that a line
+        prompting the user to create one appears on the home page.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("You don't have any albums yet", response.content)
 
 
 class TestTagView(TestCase):
