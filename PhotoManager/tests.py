@@ -316,3 +316,27 @@ class TestPhotoView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/photo.html')
+
+    def test_photo_view_elements(self):
+        """Assert that the photo and its description and tags appear
+        on the photo page.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.photo.image.url, response.content)
+        self.assertIn('Description:', response.content)
+        self.assertIn('Tags:', response.content)
+
+    def test_tags_on_photo_view(self):
+        """Add a tag to the photo and assert that the tag appears on the
+        photo view.
+        """
+        tag_text = "DevelopmentTag"
+        tag = Tag(text=tag_text)
+        tag.save()
+        self.photo.tags.add(tag)
+        self.photo.save()
+        #import pdb; pdb.set_trace()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(tag_text, response.content)
