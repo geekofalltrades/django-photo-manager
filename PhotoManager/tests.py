@@ -259,6 +259,32 @@ class TestAlbumView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/album.html')
 
+    def test_album_view_no_photos(self):
+        """Verify that an album containing no photos still displays
+        title and description.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test Album', response.content)
+        self.assertIn('Test Album Description', response.content)
+
+    def test_album_view_with_photos(self):
+        """Verify that an album containing photos shows title, description,
+        and thumbnails.
+        """
+        self.photo = Photo(
+            image=File(open('test_image.jpg')),
+            author=self.user
+        )
+        self.photo.save()
+        self.album.photos.add(self.photo)
+        self.album.save()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test Album', response.content)
+        self.assertIn('Test Album Description', response.content)
+        #assert that there's a photo in here
+
 
 class TestPhotoView(TestCase):
     """Test the photo view.
