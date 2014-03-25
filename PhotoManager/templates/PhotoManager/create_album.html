@@ -1,7 +1,7 @@
 {% extends "PhotoManager/base.html" %}
 {% block body %}
 <h1>Create Album</h1>
-<form method="POST" action="{% url 'PhotoManager:pm-create' %}">
+<form method="POST" action="{% url 'PhotoManager:pm-create_album' %}">
     {% csrf_token %}
     {{ form.as_table }}
     <input type="submit" />

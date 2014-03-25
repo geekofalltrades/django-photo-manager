@@ -133,7 +133,20 @@ def modify_album_view(request, id):
 
 def create_photo_view(request):
     """View that allows the user to create a new photo."""
-    pass
+    if request.method == 'POST':
+        form = CreatePhotoForm(request.POST, request.FILES)
+        #import pdb; pdb.set_trace()
+        if form.is_valid():
+            new_photo = form.save(commit=False)
+            new_photo.author = request.user
+            new_photo.save()
+            return HttpResponseRedirect(
+                reverse('PhotoManager:pm-photo', args=[new_photo.pk]))
+
+    else:
+        form = CreatePhotoForm()
+        context = {'form': form}
+        return render(request, 'PhotoManager/create_photo.html', context)
 
 
 def modify_photo_view(request, id):

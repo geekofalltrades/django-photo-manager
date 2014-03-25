@@ -1,0 +1,10 @@
+{% extends "PhotoManager/base.html" %}
+{% block body %}
+<h1>Create Photo</h1>
+<form enctype="multipart/form-data" method="POST" action="{% url 'PhotoManager:pm-create_photo' %}">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" />
+</form>
+<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
+{% endblock %}
