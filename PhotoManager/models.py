@@ -7,7 +7,7 @@ class Tag(models.Model):
     """A tag. Any tag can be applied to multiple photos, and those photos
     may have multiple tags.
     """
-    text = models.CharField(max_length=32)
+    text = models.CharField(max_length=32, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
