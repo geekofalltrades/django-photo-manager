@@ -241,16 +241,19 @@ class TestAlbumView(TestCase):
     The album view displays the title of the album, its description, and
     thumbnails of all photos in the album.
     """
+    fixtures = ['auth.json', 'photo_manager.json']
+
     def setUp(self):
-        self.client = Client()
-        self.user = User(username='django', password='djangopass')
-        self.user.save()
-        self.album = Album(
-            author=self.user,
-            title='Test Album',
-            description='Test Album Description'
-        )
-        self.album.save()
+        # self.client = Client()
+        # self.user = User(username='django', password='djangopass')
+        # self.user.save()
+        # self.album = Album(
+        #     author=self.user,
+        #     title='Test Album',
+        #     description='Test Album Description'
+        # )
+        # self.album.save()
+        self.album = Album.objects.get(pk=16)
         self.url = "/pm/album/%s" % self.album.pk
 
     def test_album_view(self):
@@ -265,8 +268,8 @@ class TestAlbumView(TestCase):
         """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Album', response.content)
-        self.assertIn('Test Album Description', response.content)
+        self.assertIn(self.album.title, response.content)
+        self.assertIn(self.album.description, response.content)
 
     def test_album_view_with_photos(self):
         """Verify that an album containing photos shows title, description,
@@ -344,19 +347,46 @@ class TestPhotoView(TestCase):
 
 class TestCreateAlbumView(TestCase):
     """Test the create album view."""
+    def setUp(self):
+        self.client = Client()
+        self.url = "/pm/album/create"
+        self.redirect = "pm/album/%s"
+
     def test_create_album(self):
         """Create a new album and assert that that album exists and is
         redirected to.
         """
+        form_data = {
+            'title': 'Test Album',
+            'description': 'Test Description',
+        }
+        response = self.client.post(self.url, form_data)
+        new_album = Album.objects.get(title=form_data['title'])
+        self.assertRedirects(response, self.redirect.format(new_album.pk))
+        self.assertIn(form_data['title'], response.content)
+        self.assertIn(form_data['description'], response.content)
 
     def test_create_album_missing_title(self):
         """Create an album that's missing a title and assert that the
         operation fails.
         """
+        form_data = {
+            'title': '',
+            'description': 'Test Description',
+        }
+        response = self.client.post(self.url, form_data)
+        new_album = Album.objects.get(title=form_data['title'])
+        self.assertRedirects(response, self.redirect.format(new_album.pk))
+        self.assertIn(form_data['title'], response.content)
+        self.assertIn(form_data['description'], response.content)
 
 
 class TestModifyAlbumView(TestCase):
     """Test the modify album view."""
+    def setUp(self):
+        self.client = Client()
+        self.url = "/pm/album/modify"
+
     def test_modify_album(self):
         """Modify some details of an existing album and assert that the
         changes take effect.
@@ -370,6 +400,10 @@ class TestModifyAlbumView(TestCase):
 
 class TestCreatePhotoView(TestCase):
     """Test the create photo view."""
+    def setUp(self):
+        self.client = Client()
+        self.url = "/pm/photo/create"
+
     def test_create_photo(self):
         """Create a new photo."""
 
@@ -386,12 +420,20 @@ class TestCreatePhotoView(TestCase):
 
 class TestModifyPhotoView(TestCase):
     """Test the modify photo view."""
+    def setUp(self):
+        self.client = Client()
+        self.url = "/pm/photo/modify"
+
     def test_modify_photo(self):
         """Modify a photo and assert that the changes take effect."""
 
 
 class TestCreateTagView(TestCase):
     """Test the create tag view."""
+    def setUp(self):
+        self.client = Client()
+        self.url = "/pm/tag/create"
+
     def test_create_tag(self):
         "Create a new tag."
 

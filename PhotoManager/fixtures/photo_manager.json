@@ -1,0 +1,97 @@
+[
+{
+    "pk": 2, 
+    "model": "PhotoManager.tag", 
+    "fields": {
+        "text": "dev", 
+        "date_created": "2014-03-19T23:56:37.060Z"
+    }
+},
+{
+    "pk": 3, 
+    "model": "PhotoManager.tag", 
+    "fields": {
+        "text": "Unicorn", 
+        "date_created": "2014-03-25T03:06:18.052Z"
+    }
+},
+{
+    "pk": 9, 
+    "model": "PhotoManager.tag", 
+    "fields": {
+        "text": "babby", 
+        "date_created": "2014-03-25T04:01:02.054Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "PhotoManager.photo", 
+    "fields": {
+        "description": "Lovely.", 
+        "date_modified": "2014-03-25T21:25:32.969Z", 
+        "image": "1/fingercorn.jpg", 
+        "tags": [
+            2, 
+            3
+        ], 
+        "author": 1, 
+        "date_created": "2014-03-19T23:56:58.825Z"
+    }
+},
+{
+    "pk": 4, 
+    "model": "PhotoManager.photo", 
+    "fields": {
+        "description": "Play him off, Johnny.", 
+        "date_modified": "2014-03-25T21:25:41.961Z", 
+        "image": "1/play_him_off.jpg", 
+        "tags": [
+            2
+        ], 
+        "author": 1, 
+        "date_created": "2014-03-25T03:55:09.405Z"
+    }
+},
+{
+    "pk": 5, 
+    "model": "PhotoManager.photo", 
+    "fields": {
+        "description": "babby", 
+        "date_modified": "2014-03-25T21:25:36.633Z", 
+        "image": "1/Babby.jpg", 
+        "tags": [
+            9
+        ], 
+        "author": 1, 
+        "date_created": "2014-03-25T04:00:44.523Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "PhotoManager.album", 
+    "fields": {
+        "description": "Test Description", 
+        "date_modified": "2014-03-25T21:22:23.601Z", 
+        "title": "Test Album", 
+        "author": 1, 
+        "photos": [], 
+        "date_created": "2014-03-22T22:28:16.570Z"
+    }
+},
+{
+    "pk": 15, 
+    "model": "PhotoManager.album", 
+    "fields": {
+        "description": "This test album contains photos.", 
+        "date_modified": "2014-03-25T21:26:24.905Z", 
+        "title": "Another Test Album", 
+        "author": 1, 
+        "photos": [
+            2, 
+            5, 
+            4
+        ], 
+        "date_created": "2014-03-24T23:00:38.020Z"
+    }
+}
+]
