@@ -340,3 +340,23 @@ class TestPhotoView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertIn(tag_text, response.content)
+
+
+class TestCreateAlbumView(TestCase):
+    pass
+
+
+class TestModifyAlbumView(TestCase):
+    pass
+
+
+class TestCreatePhotoView(TestCase):
+    pass
+
+
+class TestModifyPhotoView(TestCase):
+    pass
+
+
+class TestCreateTagView(TestCase):
+    pass
