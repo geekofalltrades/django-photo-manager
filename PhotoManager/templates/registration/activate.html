@@ -1,0 +1,8 @@
+{% extends "PhotoManager/base.html" %}
+{% block body %}
+<h1>We're Sorry</h1>
+<p>This registration key is invalid.</p>
+<p>If you followed a link to reach this page, this most likely means that your registration key has expired or has already been used.</p>
+<p>If you have already confirmed your account, you may <a href="{% url 'account:auth_login%}">log in</a></p>
+<p>If you did not confirm your account, you will need to <a href="{% url 'account:registration_register%}">register again.</a></p>
+{% endblock %}
