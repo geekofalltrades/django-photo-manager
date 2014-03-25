@@ -1,1 +1,1 @@
-You have {{ expiration_days }} {% if expiration_days > 1 %}days{% else %}day{% endif %} to confirm your Photo Manager account.
+Confirm your Photo Manager account
