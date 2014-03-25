@@ -222,18 +222,32 @@ class TestTagView(TestCase):
     beneath the title thumbnails of all photos which have that tag, each
     of which links to the photo view for that photo.
     """
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
-        self.tag_text = "test_tag"
-        self.tag = Tag(text=self.tag_text)
-        self.tag.save()
-        self.url = "/pm/tag/%s" % self.tag.pk
+        self.url = "/pm/tag/{}"
 
     def test_tag_view(self):
         """Test that the tag view appears as expected."""
-        response = self.client.get(self.url)
+        tag = Tag.objects.get(text='dev')
+        response = self.client.get(self.url.format(tag.pk))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/tag.html')
+
+    def test_tag_with_photos(self):
+        """Test that thumbnails for every photo with this tag appear on
+        the tag view page.
+        """
+        tag = Tag.objects.get(text='dev')
+        response = self.client.get(self.url.format(tag.pk))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/tag.html')
+        self.assertIn('img', response.content)
+        #assertInHTML does not recognize response.content as HTML even
+        #though it most definitely is HTML. It would be useful here because
+        #I could assert that every photo with the tag appeared using the
+        #count keyword argument.
 
 
 class TestAlbumView(TestCase):
@@ -244,20 +258,11 @@ class TestAlbumView(TestCase):
     fixtures = ['test_auth.json', 'test_photo_manager.json']
 
     def setUp(self):
-        # self.client = Client()
-        # self.user = User(username='django', password='djangopass')
-        # self.user.save()
-        # self.album = Album(
-        #     author=self.user,
-        #     title='Test Album',
-        #     description='Test Album Description'
-        # )
-        # self.album.save()
-        self.url = "/pm/album/%s"
+        self.client = Client()
+        self.url = "/pm/album/{}"
 
     def test_album_view(self):
         """Test that the album view appears as expected."""
-        import pdb; pdb.set_trace()
         album = Album.objects.get(title="Test Album")
         response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
@@ -270,8 +275,8 @@ class TestAlbumView(TestCase):
         album = Album.objects.get(title="Test Album")
         response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.album.title, response.content)
-        self.assertIn(self.album.description, response.content)
+        self.assertIn(album.title, response.content)
+        self.assertIn(album.description, response.content)
 
     def test_album_view_with_photos(self):
         """Verify that an album containing photos shows title, description,
@@ -280,8 +285,8 @@ class TestAlbumView(TestCase):
         album = Album.objects.get(title="Another Test Album")
         response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Album', response.content)
-        self.assertIn('Test Album Description', response.content)
+        self.assertIn(album.title, response.content)
+        self.assertIn(album.description, response.content)
         self.assertIn('preview', response.content)
 
 
