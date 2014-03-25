@@ -241,7 +241,7 @@ class TestAlbumView(TestCase):
     The album view displays the title of the album, its description, and
     thumbnails of all photos in the album.
     """
-    fixtures = ['auth.json', 'photo_manager.json']
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
 
     def setUp(self):
         # self.client = Client()
@@ -253,12 +253,13 @@ class TestAlbumView(TestCase):
         #     description='Test Album Description'
         # )
         # self.album.save()
-        self.album = Album.objects.get(pk=16)
-        self.url = "/pm/album/%s" % self.album.pk
+        self.url = "/pm/album/%s"
 
     def test_album_view(self):
         """Test that the album view appears as expected."""
-        response = self.client.get(self.url)
+        import pdb; pdb.set_trace()
+        album = Album.objects.get(title="Test Album")
+        response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/album.html')
 
@@ -266,7 +267,8 @@ class TestAlbumView(TestCase):
         """Verify that an album containing no photos still displays
         title and description.
         """
-        response = self.client.get(self.url)
+        album = Album.objects.get(title="Test Album")
+        response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.album.title, response.content)
         self.assertIn(self.album.description, response.content)
@@ -275,14 +277,8 @@ class TestAlbumView(TestCase):
         """Verify that an album containing photos shows title, description,
         and thumbnails.
         """
-        self.photo = Photo(
-            image=File(open('test_image.jpg')),
-            author=self.user
-        )
-        self.photo.save()
-        self.album.photos.add(self.photo)
-        self.album.save()
-        response = self.client.get(self.url)
+        album = Album.objects.get(title="Another Test Album")
+        response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Album', response.content)
         self.assertIn('Test Album Description', response.content)
