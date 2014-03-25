@@ -15,7 +15,7 @@
     <li><a href="{% url 'PhotoManager:pm-album' id=album.pk %}">{{ album.title }}</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}">Modify Photo</a>
 </div>
-<a href="{% url 'PhotoManager:pm-home' %}">Home</a>
+<a href="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}">Edit This Photo</a>
+<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}

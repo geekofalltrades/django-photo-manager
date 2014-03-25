@@ -2,9 +2,9 @@
 {% block body %}
 <h1>Create Album</h1>
 <form method="POST" action="{% url 'PhotoManager:pm-create' %}">
-{% csrf_token %}
-{{ form.as_table }}
-<input type="submit" />
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" />
 </form>
 <a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}

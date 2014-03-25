@@ -12,5 +12,6 @@
     {% endthumbnail %}
     {% endfor %}
 </div>
+<a href="{% url 'PhotoManager:pm-modify_album' id=album.pk %}">Edit This Album</a>
 <a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}
