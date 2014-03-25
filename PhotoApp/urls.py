@@ -12,6 +12,6 @@ urlpatterns = patterns('',
 
     url(r'^pm/', include('PhotoManager.urls', namespace='PhotoManager')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^account/', include('registration.backends.default.urls'),
-        namespace='account'),
+    url(r'^account/', include('registration.backends.default.urls',
+        namespace='account')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
