@@ -1,0 +1,10 @@
+{% extends "PhotoManager/base.html" %}
+{% block body %}
+<form action="{% url 'PhotoManager:pm-modify_album' id=album.pk %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" value="Save Changes" />
+</form>
+<a href="{% url 'PhotoManager:pm-album' id=album.pk %}">Return to Album</a>
+<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
+{% endblock %}
