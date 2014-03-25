@@ -17,7 +17,7 @@ class CreatePhotoForm(ModelForm):
     """
     class Meta(object):
         model = Photo
-        fields = ['image', 'description', 'tags', 'albums']
+        fields = ['image', 'description', 'tags']
 
 
 class EditPhotoForm(ModelForm):
@@ -26,7 +26,7 @@ class EditPhotoForm(ModelForm):
     """
     class Meta(object):
         model = Photo
-        fields = ['description', 'tags', 'albums']
+        fields = ['description', 'tags']
 
 
 class AlbumForm(ModelForm):
@@ -120,15 +120,15 @@ def modify_album_view(request, id):
     if request.method == 'POST':
         form = AlbumForm(request.POST, instance=album)
         if form.is_valid():
-            new_album = form.save()
+            form.save()
             return HttpResponseRedirect(
-                reverse('PhotoManager:pm-album', args=[new_album.pk]))
+                reverse('PhotoManager:pm-album', args=[album.pk]))
 
     else:
         form = AlbumForm(instance=album)
 
-    context = {'form': form}
-    return render(request, 'PhotoManager/modify.html', context)
+    context = {'form': form, 'album': album}
+    return render(request, 'PhotoManager/modify_album.html', context)
 
 
 def create_photo_view(request):
@@ -138,13 +138,27 @@ def create_photo_view(request):
 
 def modify_photo_view(request, id):
     """View that allows the user to modify a photo."""
-    pass
+    photo = Photo.objects.get(pk=id)
+
+    if request.method == 'POST':
+        form = EditPhotoForm(request.POST, instance=photo)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(
+                reverse('PhotoManager:pm-photo', args=[photo.pk]))
+
+    else:
+        form = EditPhotoForm(instance=photo)
+        tag_form = TagForm()
+
+    context = {'form': form, 'tag_form': tag_form, 'photo': photo}
+    return render(request, 'PhotoManager/modify_photo.html', context)
 
 
 def create_tag_view(request):
     """View that allows the user to create a new tag.
-    This view is only reachable from modify_photo_view, and so redirects
-    there. Users do not have the power to modify existing tags.
+    This view is only reachable from the modify photo view, and so redirects
+    there.
     """
     form = TagForm(request.POST)
     photo = Photo.objects.get(pk=request.POST['photo'])
@@ -153,4 +167,5 @@ def create_tag_view(request):
         photo.tags.add(new_tag)
         photo.save()
 
-    return HttpResponseRedirect('PhotoManager:pm-photo', args=[photo.pk])
+    return HttpResponseRedirect(
+        reverse('PhotoManager:pm-modify_photo', kwargs={'id': photo.pk}))
