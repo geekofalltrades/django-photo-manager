@@ -11,16 +11,22 @@ class TagForm(ModelForm):
         fields = ['text']
 
 
-class PhotoForm(ModelForm):
+class CreatePhotoForm(ModelForm):
+    """The CreatePhotoForm allows users to upload an image to associate
+    with this photo.
+    """
     class Meta(object):
         model = Photo
-        fields = ['image', 'description', 'tags']
+        fields = ['image', 'description', 'tags', 'albums']
 
 
-class TagPhotoForm(ModelForm):
+class EditPhotoForm(ModelForm):
+    """The EditPhotoForm does not allow users to change the image associated
+    with this photo object.
+    """
     class Meta(object):
         model = Photo
-        fields = ['tags']
+        fields = ['description', 'tags', 'albums']
 
 
 class AlbumForm(ModelForm):
@@ -66,21 +72,7 @@ def photo_view(request, id):
     that the user is adding a tag to this photo.
     """
     photo = Photo.objects.get(pk=id)
-    tag_form = TagPhotoForm(instance=photo)
-    create_form = TagForm()
-
-    if request.method == 'POST':
-        tag_form = TagPhotoForm(request.POST, instance=photo)
-        if tag_form.is_valid():
-            tag_form.save()
-            return HttpResponseRedirect(
-                reverse('PhotoManager:pm-photo', args=[photo.pk]))
-
-    context = {
-        'photo': photo,
-        'tag_form': tag_form,
-        'create_form': create_form,
-    }
+    context = {'photo': photo}
     return render(request, 'PhotoManager/photo.html', context)
 
 
@@ -111,11 +103,11 @@ def create_album_view(request):
             new_album.save()
             return HttpResponseRedirect(
                 reverse('PhotoManager:pm-album', args=[new_album.pk]))
+
     else:
         form = AlbumForm()
-
-    context = {'form': form}
-    return render(request, 'PhotoManager/create_album.html', context)
+        context = {'form': form}
+        return render(request, 'PhotoManager/create_album.html', context)
 
 
 def modify_album_view(request, id):
@@ -124,12 +116,14 @@ def modify_album_view(request, id):
     description or add or remove photos.
     """
     album = Album.objects.get(pk=id)
+
     if request.method == 'POST':
         form = AlbumForm(request.POST, instance=album)
         if form.is_valid():
             new_album = form.save()
             return HttpResponseRedirect(
                 reverse('PhotoManager:pm-album', args=[new_album.pk]))
+
     else:
         form = AlbumForm(instance=album)
 
