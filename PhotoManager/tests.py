@@ -343,20 +343,59 @@ class TestPhotoView(TestCase):
 
 
 class TestCreateAlbumView(TestCase):
-    pass
+    """Test the create album view."""
+    def test_create_album(self):
+        """Create a new album and assert that that album exists and is
+        redirected to.
+        """
+
+    def test_create_album_missing_title(self):
+        """Create an album that's missing a title and assert that the
+        operation fails.
+        """
 
 
 class TestModifyAlbumView(TestCase):
-    pass
+    """Test the modify album view."""
+    def test_modify_album(self):
+        """Modify some details of an existing album and assert that the
+        changes take effect.
+        """
+
+    def test_modify_unallowed(self):
+        """Attempt to delete the title of an album and assert that the
+        operation fails.
+        """
 
 
 class TestCreatePhotoView(TestCase):
-    pass
+    """Test the create photo view."""
+    def test_create_photo(self):
+        """Create a new photo."""
+
+    def test_create_photo_bad_image(self):
+        """Attempt to create a photo using an image that doesn't exist and
+        assert that the operation fails.
+        """
+
+    def test_create_photo_no_image(self):
+        """Try to create a photo without an image and assert that the
+        operation fails.
+        """
 
 
 class TestModifyPhotoView(TestCase):
-    pass
+    """Test the modify photo view."""
+    def test_modify_photo(self):
+        """Modify a photo and assert that the changes take effect."""
 
 
 class TestCreateTagView(TestCase):
-    pass
+    """Test the create tag view."""
+    def test_create_tag(self):
+        "Create a new tag."
+
+    def test_create_tag_without_text(self):
+        """Attempt to create a tag without text and assert that the
+        operation fails.
+        """
