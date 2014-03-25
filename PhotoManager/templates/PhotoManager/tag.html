@@ -1,4 +1,5 @@
 {% extends "PhotoManager/base.html" %}
+{% block page_title %}: Viewing Tag {{ tag.text }}{% endblock %}
 {% block body %}
 {% load thumbnail %}
 <h1>Displaying photos with tag "{{ tag.text }}"</h1>

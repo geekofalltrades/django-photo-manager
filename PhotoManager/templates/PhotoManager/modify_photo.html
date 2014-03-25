@@ -1,4 +1,5 @@
 {% extends "PhotoManager/base.html" %}
+{% block page_title %}: Editing Photo{% endblock %}
 {% block body %}
 <form action="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}" method="POST">
     {% csrf_token %}

@@ -1,7 +1,8 @@
 {% extends "PhotoManager/base.html" %}
+{% block page_title %}: {{ user.username }}'s Home{% endblock %}
 {% block body %}
 {% load thumbnail %}
-<h1>{{ request.user }}'s Homepage</h1>
+<h1>{{ user.username }}'s Homepage</h1>
 <a href="{% url 'PhotoManager:pm-create_album' %}">Create a New Album</a>
 <a href="{% url 'PhotoManager:pm-create_photo' %}">Upload a New Photo</a>
 <div class="albums">

@@ -1,4 +1,5 @@
 {% extends "PhotoManager/base.html" %}
+{% block page_title %}: Create New Album{% endblock %}
 {% block body %}
 <h1>Create Album</h1>
 <form method="POST" action="{% url 'PhotoManager:pm-create_album' %}">
