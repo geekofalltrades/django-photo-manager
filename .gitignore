@@ -1,2 +1,3 @@
 *.pyc
 PhotoApp/dev_settings.py
+media/
