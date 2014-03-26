@@ -78,6 +78,8 @@ def photo_view(request, id):
     that the user is adding a tag to this photo.
     """
     photo = Photo.objects.get(pk=id)
+    if photo.author.pk != request.user.pk:
+        return HttpResponseForbidden("403 Forbidden")
     context = {'photo': photo}
     return render(request, 'PhotoManager/photo.html', context)
 

@@ -279,7 +279,7 @@ class TestAlbumView(TestCase):
         response = self.client.get(self.url.format(album.pk))
         self.assertRedirects(response, self.login_redirect.format(album.pk))
 
-    def test_album_wrong_user(self):
+    def test_album_view_wrong_user(self):
         """Attempt to access an album from a user account that the album
         doesn't belong to.
         """
@@ -322,14 +322,34 @@ class TestPhotoView(TestCase):
 
     def setUp(self):
         self.client = Client()
+        self.client.login(username='django', password='djangopass')
         self.photo = Photo.objects.get(pk=2)
         self.url = "/pm/photo/{}".format(self.photo.pk)
+        self.login_redirect = "/account/login/?next={}".format(self.url)
 
     def test_photo_view(self):
         """Test that the photo view appears as expected."""
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/photo.html')
+
+    def test_photo_view_not_logged_in(self):
+        """Try to access the photo view when not logged in and assert that
+        we are redirected to the login view.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, self.login_redirect)
+
+    def test_photo_view_wrong_user(self):
+        """Attempt to access a photo from a user account that the photo
+        doesn't belong to.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('403 Forbidden', response.content)
 
     def test_photo_view_elements(self):
         """Assert that the photo and its description and tags appear
