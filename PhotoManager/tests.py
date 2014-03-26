@@ -296,24 +296,12 @@ class TestPhotoView(TestCase):
     tags, and a link back to the album that contains it, and a link back
     to the homepage.
     """
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
-        self.user = User(username='django', password='djangopass')
-        self.user.save()
-        self.album = Album(
-            author=self.user,
-            title='Test Album',
-            description='Test Album Description'
-        )
-        self.album.save()
-        self.photo = Photo(
-            image=File(open('test_image.jpg')),
-            author=self.user
-        )
-        self.photo.save()
-        self.album.photos.add(self.photo)
-        self.album.save()
-        self.url = "/pm/photo/%s" % self.photo.pk
+        self.photo = Photo.objects.get(pk=2)
+        self.url = "/pm/photo/{}".format(self.photo.pk)
 
     def test_photo_view(self):
         """Test that the photo view appears as expected."""
@@ -329,21 +317,15 @@ class TestPhotoView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.photo.image.url, response.content)
         self.assertIn('Description:', response.content)
+        self.assertIn(self.photo.description, response.content)
         self.assertIn('Tags:', response.content)
-
-    def test_tags_on_photo_view(self):
-        """Add a tag to the photo and assert that the tag appears on the
-        photo view.
-        """
-        tag_text = "DevelopmentTag"
-        tag = Tag(text=tag_text)
-        tag.save()
-        self.photo.tags.add(tag)
-        self.photo.save()
-        #import pdb; pdb.set_trace()
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(tag_text, response.content)
+        for tag in self.photo.tags.all():
+            self.assertIn(tag.text, response.content)
+        self.assertIn('Albums Containing This Photo:', response.content)
+        for album in self.photo.album_set.all():
+            self.assertIn(album.title, response.content)
+        self.assertIn('Edit This Photo', response.content)
+        self.assertIn('Return Home', response.content)
 
 
 class TestCreateAlbumView(TestCase):
