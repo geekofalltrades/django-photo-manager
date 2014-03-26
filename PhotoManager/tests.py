@@ -259,7 +259,9 @@ class TestAlbumView(TestCase):
 
     def setUp(self):
         self.client = Client()
+        self.client.login(username='django', password='djangopass')
         self.url = "/pm/album/{}"
+        self.login_redirect = "/account/login/?next={}".format(self.url)
 
     def test_album_view(self):
         """Test that the album view appears as expected."""
@@ -267,6 +269,26 @@ class TestAlbumView(TestCase):
         response = self.client.get(self.url.format(album.pk))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/album.html')
+
+    def test_album_view_not_logged_in(self):
+        """Try to access the album view when not logged in and assert that
+        we are redirected to the login view.
+        """
+        self.client.logout()
+        album = Album.objects.get(title="Test Album")
+        response = self.client.get(self.url.format(album.pk))
+        self.assertRedirects(response, self.login_redirect.format(album.pk))
+
+    def test_album_wrong_user(self):
+        """Attempt to access an album from a user account that the album
+        doesn't belong to.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        album = Album.objects.get(title="Test Album")
+        response = self.client.get(self.url.format(album.pk))
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('403 Forbidden', response.content)
 
     def test_album_view_no_photos(self):
         """Verify that an album containing no photos still displays

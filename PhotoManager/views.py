@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.forms import ModelForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 from models import Tag, Photo, Album
 
 
@@ -43,27 +44,32 @@ def frontpage_view(request):
     return render(request, 'PhotoManager/frontpage.html')
 
 
+@login_required
 def home_view(request):
     """View the home page.
     Shows a list of the user's albums with title and description.
     """
-    # albums = Album.objects.\
-    #     filter(author__exact=request.user.pk).order_by('-date_created')
-    albums = Album.objects.all()
+    albums = Album.objects.\
+        filter(author__exact=request.user.pk).order_by('-date_created')
     context = {'albums': albums}
     return render(request, 'PhotoManager/homepage.html', context)
 
 
+@login_required
 def album_view(request, id):
     """View a single album.
     Shows thumbnails of the photos in the album, plus the album's title
     and description, if any.
     """
+    # import pdb; pdb.set_trace()
     album = Album.objects.get(pk=id)
+    if album.author.pk != request.user.pk:
+        return HttpResponseForbidden("403 Forbidden")
     context = {'album': album}
     return render(request, 'PhotoManager/album.html', context)
 
 
+@login_required
 def photo_view(request, id):
     """View a single photo.
     Shows the photo, its description (if any), and its tags (if any),
@@ -76,6 +82,7 @@ def photo_view(request, id):
     return render(request, 'PhotoManager/photo.html', context)
 
 
+@login_required
 def tag_view(request, id):
     """View a list of photos represented by a certain tag.
     Shows thumbnails of the photos with a certain tag applied, which link
@@ -87,6 +94,7 @@ def tag_view(request, id):
     return render(request, 'PhotoManager/tag.html', context)
 
 
+@login_required
 def create_album_view(request):
     """View that allows users to create an album.
     Presents the user with a form allowing them to initialize album
@@ -110,6 +118,7 @@ def create_album_view(request):
     return render(request, 'PhotoManager/create_album.html', context)
 
 
+@login_required
 def modify_album_view(request, id):
     """View that allows users to modify an album.
     Presents the user with a form allowing them to change the title or
@@ -131,6 +140,7 @@ def modify_album_view(request, id):
     return render(request, 'PhotoManager/modify_album.html', context)
 
 
+@login_required
 def create_photo_view(request):
     """View that allows the user to create a new photo."""
     if request.method == 'POST':
@@ -149,6 +159,7 @@ def create_photo_view(request):
         return render(request, 'PhotoManager/create_photo.html', context)
 
 
+@login_required
 def modify_photo_view(request, id):
     """View that allows the user to modify a photo."""
     photo = Photo.objects.get(pk=id)
@@ -168,6 +179,7 @@ def modify_photo_view(request, id):
     return render(request, 'PhotoManager/modify_photo.html', context)
 
 
+@login_required
 def create_tag_view(request):
     """View that allows the user to create a new tag.
     This view is only reachable from the modify photo view, and so redirects
