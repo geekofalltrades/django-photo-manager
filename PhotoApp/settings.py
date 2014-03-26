@@ -113,4 +113,4 @@ CACHES = {
 #login decorator required setting
 LOGIN_URL = '/account/login/'
 
-#SITE_ID = 1
+SITE_ID = 1
