@@ -177,9 +177,13 @@ class TestHomeView(TestCase):
     The home page displays the albums belonging to the user who is logged
     in.
     """
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
+        self.client.login(username='django', password='djangopass')
         self.url = "/pm/home/"
+        self.login_redirect = "/account/login/?next={}".format(self.url)
 
     def test_home_page_view(self):
         """Test that the home page appears as it should. Eventually these
@@ -190,30 +194,33 @@ class TestHomeView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/homepage.html')
 
-    def test_home_page_with_albums(self):
+    def test_home_view_not_logged_in(self):
+        """Try to access the home view when not logged in and assert that
+        we are redirected to the login view.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, self.login_redirect)
+
+    def test_home_view_without_albums(self):
+        """Log in as a user with no photos and assert that no photos appear
+        on the tag view.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn('class="album"', response.content)
+
+    def test_home_view_with_albums(self):
         """If the logged in user has albums, assert that they appear on
         the front page.
         """
-        self.user = User(username='django', password='djangopass')
-        self.user.save()
-        self.album = Album(
-            author=self.user,
-            title='Test Album',
-            description='Test Album Description'
-        )
-        self.album.save()
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+        self.assertIn('class="album"', response.content)
         self.assertIn('Test Album', response.content)
-        self.assertIn('Test Album Description', response.content)
-
-    def test_home_page_without_albums(self):
-        """If the logged in user does not have albums, assert that a line
-        prompting the user to create one appears on the home page.
-        """
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("You don't have any albums yet", response.content)
+        self.assertIn('Test Description', response.content)
 
 
 class TestTagView(TestCase):
@@ -246,7 +253,7 @@ class TestTagView(TestCase):
         response = self.client.get(self.url.format(tag.pk))
         self.assertRedirects(response, self.login_redirect.format(tag.pk))
 
-    def test_tag_view_without_photos(self):
+    def test_tag_view_without_tags(self):
         """Log in as a user with no photos and assert that no photos appear
         on the tag view.
         """
