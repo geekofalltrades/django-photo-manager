@@ -226,7 +226,9 @@ class TestTagView(TestCase):
 
     def setUp(self):
         self.client = Client()
+        self.client.login(username='django', password='djangopass')
         self.url = "/pm/tag/{}"
+        self.login_redirect = "/account/login/?next={}".format(self.url)
 
     def test_tag_view(self):
         """Test that the tag view appears as expected."""
@@ -235,19 +237,39 @@ class TestTagView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('PhotoManager/tag.html')
 
+    def test_tag_view_not_logged_in(self):
+        """Try to access the tag view when not logged in and assert that
+        we are redirected to the login view.
+        """
+        self.client.logout()
+        tag = Tag.objects.get(text='dev')
+        response = self.client.get(self.url.format(tag.pk))
+        self.assertRedirects(response, self.login_redirect.format(tag.pk))
+
+    def test_tag_view_without_photos(self):
+        """Log in as a user with no photos and assert that no photos appear
+        on the tag view.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        tag = Tag.objects.get(text='dev')
+        response = self.client.get(self.url.format(tag.pk))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn('img', response.content)
+
     def test_tag_with_photos(self):
-        """Test that thumbnails for every photo with this tag appear on
-        the tag view page.
+        """Log in as a user with photos and assert that photos with the
+        given tag appear on the tag view. Test that thumbnails for every
+        photo with this tag appear on the tag view page.
         """
         tag = Tag.objects.get(text='dev')
         response = self.client.get(self.url.format(tag.pk))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed('PhotoManager/tag.html')
         self.assertIn('img', response.content)
         #assertInHTML does not recognize response.content as HTML even
         #though it most definitely is HTML. It would be useful here because
         #I could assert that every photo with the tag appeared using the
-        #count keyword argument.
+        #"count" keyword argument.
 
 
 class TestAlbumView(TestCase):

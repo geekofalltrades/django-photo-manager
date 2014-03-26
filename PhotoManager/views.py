@@ -91,7 +91,7 @@ def tag_view(request, id):
     to that photo's page.
     """
     tag = Tag.objects.get(id=id)
-    photos = Photo.objects.filter(tags__id=id)
+    photos = Photo.objects.filter(author__exact=request.user, tags__id=id)
     context = {'photos': photos, 'tag': tag}
     return render(request, 'PhotoManager/tag.html', context)
 
