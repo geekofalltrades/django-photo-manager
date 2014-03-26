@@ -103,11 +103,11 @@ def create_album_view(request):
             new_album.save()
             return HttpResponseRedirect(
                 reverse('PhotoManager:pm-album', args=[new_album.pk]))
-
     else:
         form = AlbumForm()
-        context = {'form': form}
-        return render(request, 'PhotoManager/create_album.html', context)
+
+    context = {'form': form}
+    return render(request, 'PhotoManager/create_album.html', context)
 
 
 def modify_album_view(request, id):

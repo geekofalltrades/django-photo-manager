@@ -330,18 +330,49 @@ class TestPhotoView(TestCase):
 
 class TestCreateAlbumView(TestCase):
     """Test the create album view."""
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
+        # self.photo = Photo.objects.get(pk=2)
         self.url = "/pm/album/create"
-        self.redirect = "pm/album/%s"
+        self.redirect = "pm/album/{}"
+        self.login_redirect = "account/login"
+
+    def test_create_album_get(self):
+        """Send a GET request to the create album view and insure that the
+        page is rendered as expected.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/create_album.html')
+
+    def test_create_album_view_elements(self):
+        """Assert that the required elements are present on the album
+        creation page.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Create Album', response.content)
+        self.assertIn('Return Home', response.content)
+        self.assertIn('Title:', response.content)
+        self.assertIn('Description:', response.content)
+        self.assertIn('Photos:', response.content)
+
+    def test_create_album_not_logged_in(self):
+        """Attempt to connect to the create album view when not logged in
+        and assert that this operation redirects to the login view.
+        """
+        response = self.client.get(self.url)
+        self.assertRedirects(response, self.login_redirect)
 
     def test_create_album(self):
         """Create a new album and assert that that album exists and is
         redirected to.
         """
         form_data = {
-            'title': 'Test Album',
-            'description': 'Test Description',
+            'title': 'Real-Time Test Album',
+            'description': 'Real-Time Test Description',
         }
         response = self.client.post(self.url, form_data)
         new_album = Album.objects.get(title=form_data['title'])
@@ -355,12 +386,10 @@ class TestCreateAlbumView(TestCase):
         """
         form_data = {
             'title': '',
-            'description': 'Test Description',
+            'description': 'Real-Time Test Description',
         }
         response = self.client.post(self.url, form_data)
-        new_album = Album.objects.get(title=form_data['title'])
-        self.assertRedirects(response, self.redirect.format(new_album.pk))
-        self.assertIn(form_data['title'], response.content)
+        self.assertTemplateUsed('PhotoManager/create_album.html')
         self.assertIn(form_data['description'], response.content)
 
 
