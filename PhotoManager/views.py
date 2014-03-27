@@ -127,6 +127,8 @@ def modify_album_view(request, id):
     description or add or remove photos.
     """
     album = Album.objects.get(pk=id)
+    if album.author.pk != request.user.pk:
+        return HttpResponseForbidden("403 Forbidden")
 
     if request.method == 'POST':
         form = AlbumForm(request.POST, instance=album)

@@ -406,7 +406,6 @@ class TestCreateAlbumView(TestCase):
     def setUp(self):
         self.client = Client()
         self.client.login(username='django', password='djangopass')
-        # self.photo = Photo.objects.get(pk=2)
         self.url = "/pm/album/create"
         self.login_redirect = "/account/login/?next={}".format(self.url)
 
@@ -465,19 +464,83 @@ class TestCreateAlbumView(TestCase):
 
 class TestModifyAlbumView(TestCase):
     """Test the modify album view."""
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
-        self.url = "/pm/album/modify"
+        self.client.login(username='django', password='djangopass')
+        self.album = Album.objects.get(title='Test Album')
+        self.url = "/pm/album/modify/{}".format(self.album.pk)
+        self.redirect = "/pm/album/{}".format(self.album.pk)
+        self.login_redirect = "/account/login/?next={}".format(self.url)
 
-    def test_modify_album(self):
+    def test_modify_album_view_get(self):
+        """Send a GET request to the photo modification view and assert
+        that it appears as expected.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/modify_album.html')
+
+    def test_modify_album_view_not_logged_in(self):
+        """Try to access the modify photo view when not logged in and
+        assert that we are redirected to the login view.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, self.login_redirect)
+
+    def test_modify_album_view_wrong_user(self):
+        """Attempt to modify a photo from a user account that the photo
+        doesn't belong to.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('403 Forbidden', response.content)
+
+    def test_modify_album_view_elements(self):
+        """Assert that the required elements are present on the album
+        modification page.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Edit Album', response.content)
+        self.assertIn('Return Home', response.content)
+        self.assertIn('Return to Album', response.content)
+        self.assertIn('Title:', response.content)
+        self.assertIn('Description:', response.content)
+        self.assertIn('Photos:', response.content)
+        self.assertIn(self.album.title, response.content)
+        self.assertIn(self.album.description, response.content)
+
+    def test_modify_album_view_post(self):
         """Modify some details of an existing album and assert that the
         changes take effect.
         """
+        form_data = {
+            'title': 'New Test Title',
+            'description': 'New Test Description'
+        }
+        response = self.client.post(self.url, form_data, follow=True)
+        self.assertRedirects(response, self.redirect, target_status_code=200)
+        self.assertIn(form_data['title'], response.content)
+        self.assertIn(form_data['description'], response.content)
 
-    def test_modify_unallowed(self):
+    def test_modify_album_view_unallowed_modification(self):
         """Attempt to delete the title of an album and assert that the
         operation fails.
         """
+        form_data = {
+            'title': '',
+            'description': 'New Test Description'
+        }
+        response = self.client.post(self.url, form_data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/modify_album.html')
+        self.assertIn(form_data['title'], response.content)
+        self.assertIn(form_data['description'], response.content)
 
 
 class TestCreatePhotoView(TestCase):

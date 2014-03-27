@@ -1,6 +1,7 @@
 {% extends "PhotoManager/base.html" %}
 {% block page_title %}: Editing {{ album.title }}{% endblock %}
 {% block body %}
+<h1>Edit Album</h1>
 <form action="{% url 'PhotoManager:pm-modify_album' id=album.pk %}" method="POST">
     {% csrf_token %}
     {{ form.as_table }}
