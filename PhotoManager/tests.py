@@ -475,7 +475,7 @@ class TestModifyAlbumView(TestCase):
         self.login_redirect = "/account/login/?next={}".format(self.url)
 
     def test_modify_album_view_get(self):
-        """Send a GET request to the photo modification view and assert
+        """Send a GET request to the album modification view and assert
         that it appears as expected.
         """
         response = self.client.get(self.url)
@@ -483,7 +483,7 @@ class TestModifyAlbumView(TestCase):
         self.assertTemplateUsed('PhotoManager/modify_album.html')
 
     def test_modify_album_view_not_logged_in(self):
-        """Try to access the modify photo view when not logged in and
+        """Try to access the modify album view when not logged in and
         assert that we are redirected to the login view.
         """
         self.client.logout()
@@ -491,7 +491,7 @@ class TestModifyAlbumView(TestCase):
         self.assertRedirects(response, self.login_redirect)
 
     def test_modify_album_view_wrong_user(self):
-        """Attempt to modify a photo from a user account that the photo
+        """Attempt to modify an album from a user account that the album
         doesn't belong to.
         """
         self.client.logout()
@@ -608,12 +608,71 @@ class TestCreatePhotoView(TestCase):
 
 class TestModifyPhotoView(TestCase):
     """Test the modify photo view."""
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
-        self.url = "/pm/photo/modify"
+        self.client.login(username='django', password='djangopass')
+        self.photo = Photo.objects.get(description='babby')
+        self.url = "/pm/photo/modify/{}".format(self.photo.pk)
+        self.redirect = "/pm/photo/{}".format(self.photo.pk)
+        self.login_redirect = "/account/login/?next={}".format(self.url)
 
-    def test_modify_photo(self):
-        """Modify a photo and assert that the changes take effect."""
+    def test_modify_photo_view_get(self):
+        """Send a GET request to the photo modification view and assert
+        that it appears as expected.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/modify_album.html')
+
+    def test_modify_photo_view_not_logged_in(self):
+        """Try to access the modify photo view when not logged in and
+        assert that we are redirected to the login view.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, self.login_redirect)
+
+    def test_modify_photo_view_wrong_user(self):
+        """Attempt to modify a photo from a user account that the photo
+        doesn't belong to.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('403 Forbidden', response.content)
+
+    def test_modify_photo_view_elements(self):
+        """Assert that the required elements are present on the photo
+        modification page.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Edit Photo', response.content)
+        self.assertIn('Return Home', response.content)
+        self.assertIn('Return to Photo', response.content)
+        self.assertIn('Description:', response.content)
+        self.assertIn('Tags:', response.content)
+        self.assertIn('Or, create a new tag for this photo', response.content)
+        self.assertIn('Text:', response.content)
+        self.assertIn(self.photo.description, response.content)
+        for tag in self.photo.tags.all():
+            self.assertIn(tag.text, response.content)
+
+    # def test_modify_photo_view_post(self):
+    #     """Modify some details of an existing photo and assert that the
+    #     changes take effect.
+    #     """
+    #     form_data = {
+    #         'description': 'New Test Description',
+    #         'tags': '????????????????????????????????????????????????????????',
+    #     }
+    #     response = self.client.post(self.url, form_data, follow=True)
+    #     self.assertRedirects(response, self.redirect, target_status_code=200)
+    #     self.assertIn(form_data['title'], response.content)
+    #     self.assertIn(form_data['description'], response.content)
 
 
 class TestCreateTagView(TestCase):

@@ -149,7 +149,6 @@ def create_photo_view(request):
     """View that allows the user to create a new photo."""
     if request.method == 'POST':
         form = CreatePhotoForm(request.POST, request.FILES)
-        #import pdb; pdb.set_trace()
         if form.is_valid():
             new_photo = form.save(commit=False)
             new_photo.author = request.user
@@ -168,6 +167,8 @@ def create_photo_view(request):
 def modify_photo_view(request, id):
     """View that allows the user to modify a photo."""
     photo = Photo.objects.get(pk=id)
+    if photo.author.pk != request.user.pk:
+        return HttpResponseForbidden("403 Forbidden")
 
     if request.method == 'POST':
         form = EditPhotoForm(request.POST, instance=photo)
