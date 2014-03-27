@@ -4,7 +4,6 @@
 {% load thumbnail %}
 <h1>{{ user.username }}'s Homepage</h1>
 <a href="{% url 'PhotoManager:pm-create_album' %}">Create a New Album</a>
-<a href="{% url 'PhotoManager:pm-create_photo' %}">Upload a New Photo</a>
 <div class="albums">
 {% if albums %}
 {% for album in albums %}
