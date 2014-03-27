@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.forms import ModelForm
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden, \
+    HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from models import Tag, Photo, Album
@@ -191,12 +192,19 @@ def create_tag_view(request):
     This view is only reachable from the modify photo view, and so redirects
     there.
     """
-    form = TagForm(request.POST)
-    photo = Photo.objects.get(pk=request.POST['photo'])
-    if form.is_valid():
-        new_tag = form.save()
-        photo.tags.add(new_tag)
-        photo.save()
+    if request.method == 'POST':
+        photo = Photo.objects.get(pk=request.POST['photo'])
+        if photo.author.pk != request.user.pk:
+            return HttpResponseForbidden("403 Forbidden")
 
-    return HttpResponseRedirect(
-        reverse('PhotoManager:pm-modify_photo', kwargs={'id': photo.pk}))
+        form = TagForm(request.POST)
+        if form.is_valid():
+            new_tag = form.save()
+            photo.tags.add(new_tag)
+            photo.save()
+
+        return HttpResponseRedirect(
+            reverse('PhotoManager:pm-modify_photo', kwargs={'id': photo.pk}))
+    else:
+        return HttpResponseNotAllowed(
+            ['POST'], content='405 Method Not Allowed')

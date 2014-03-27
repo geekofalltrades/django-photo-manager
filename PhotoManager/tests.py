@@ -677,14 +677,57 @@ class TestModifyPhotoView(TestCase):
 
 class TestCreateTagView(TestCase):
     """Test the create tag view."""
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
+        self.client.login(username='django', password='djangopass')
+        self.photo = Photo.objects.get(description='babby')
         self.url = "/pm/tag/create"
+        self.redirect = "/pm/photo/modify/{}".format(self.photo.pk)
+        self.login_redirect = "/account/login/?next={}".format(self.url)
+        self.form_data = {
+            'text': 'TestTag',
+            'photo': self.photo.pk,
+        }
+
+    def test_create_tag_view_get(self):
+        """Try to send a GET request to the tag view and assert that we
+        receive a method not allowed response.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 405)
+        self.assertIn('405 Method Not Allowed', response.content)
+
+    def test_create_tag_view_not_logged_in(self):
+        """Try to access the create tag view when not logged in and
+        assert that we are redirected to the login view.
+        """
+        self.client.logout()
+        response = self.client.post(self.url, self.form_data)
+        self.assertRedirects(response, self.login_redirect)
+
+    def test_create_tag_view_wrong_user(self):
+        """Attempt to create a tag on a photo from a user account that
+        the photo doesn't belong to.
+        """
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        response = self.client.post(self.url, self.form_data)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('403 Forbidden', response.content)
 
     def test_create_tag(self):
         "Create a new tag."
+        response = self.client.post(self.url, self.form_data)
+        self.assertRedirects(response, self.redirect, target_status_code=200)
 
     def test_create_tag_without_text(self):
         """Attempt to create a tag without text and assert that the
         operation fails.
         """
+        self.form_data['text'] = ''
+        response = self.client.post(self.url, self.form_data)
+        self.assertRedirects(response, self.redirect, target_status_code=200)
+        photo = Photo.objects.get(pk=self.photo.pk)
+        self.assertNotIn('', [tag.text for tag in photo.tags.all()])
