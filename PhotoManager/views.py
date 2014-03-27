@@ -151,7 +151,8 @@ def modify_album_view(request, id):
     else:
         form = AlbumForm(instance=album, authorized_user=request.user)
 
-    context = {'form': form, 'album': album}
+    photo_form = CreatePhotoForm()
+    context = {'form': form, 'album': album, 'photo_form': photo_form}
     return render(request, 'PhotoManager/modify_album.html', context)
 
 
