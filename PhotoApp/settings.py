@@ -113,4 +113,6 @@ CACHES = {
 #login decorator required setting
 LOGIN_URL = '/account/login/'
 
+LOGIN_REDIRECT_URL = '/pm/home/'
+
 SITE_ID = 1
