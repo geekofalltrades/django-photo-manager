@@ -127,7 +127,7 @@ def update():
 
 
 def _install_dependencies():
-    sudo('apt-get install python-all-dev python-setuptools python-pip libpq-dev zlib-dev libjpeg10-dev libmemcached-dev')
+    sudo('apt-get install python-all-dev python-setuptools python-pip libpq-dev zlib1g-dev libjpeg10-dev libmemcached-dev')
 
 
 def install_dependencies():
@@ -138,18 +138,18 @@ def _install_python_reqs():
     sudo('pip install -r requirements.txt')
 
 
+def install_python_reqs():
+    run_command_on_selected_server(_install_python_reqs)
+
+
 def _install_postgres():
     sudo('sudo apt-get install postgresql postgresql-contrib')
-    sudo('''psql -c "CREATE USER django WITH SUPERUSER PASSWORD 'djangopass';"''')
-    sudo('createdb photoapp')
+    sudo('''psql -c "CREATE USER django WITH SUPERUSER PASSWORD 'djangopass';"''', user='Postgres')
+    sudo('createdb photoapp', user='Postgres')
 
 
 def install_postgres():
     run_command_on_selected_server(_install_postgres)
-
-
-def install_python_reqs():
-    run_command_on_selected_server(_install_python_reqs)
 
 
 def _install_nginx():
@@ -227,12 +227,10 @@ def deploy():
 def _deploy():
     rsync_project('~')
 
-    #sudo('createdb microblog')
-
     with cd('FlaskMicroblog'):
         _install_python_reqs()
-        sudo('export MICROBLOG_CONFIG=`pwd`/config.py')
-        #sudo('python microblog.py db upgrade')
+        sudo('export DJANGO_SETTINGS_MODULE=`pwd`/dev_settings.py')
+        sudo('python manage.py migrate')
         sudo('mv nginx_config /etc/nginx/sites-available/default')
         sudo('cp microblog.conf /etc/supervisor/conf.d')
 
