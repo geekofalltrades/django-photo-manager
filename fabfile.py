@@ -119,7 +119,7 @@ def run_command_on_selected_server(command):
 
 
 def _update():
-    sudo('apt-get update')
+    sudo('apt-get -y update')
 
 
 def update():
@@ -127,7 +127,7 @@ def update():
 
 
 def _install_dependencies():
-    sudo('apt-get install python-all-dev python-setuptools python-pip libpq-dev zlib1g-dev libjpeg10-dev libmemcached-dev')
+    sudo('apt-get -y install python-all-dev python-setuptools python-pip libpq-dev zlib1g-dev libjpeg-dev libmemcached-dev')
 
 
 def install_dependencies():
@@ -143,9 +143,9 @@ def install_python_reqs():
 
 
 def _install_postgres():
-    sudo('sudo apt-get install postgresql postgresql-contrib')
-    sudo('''psql -c "CREATE USER django WITH SUPERUSER PASSWORD 'djangopass';"''', user='Postgres')
-    sudo('createdb photoapp', user='Postgres')
+    sudo('sudo apt-get -y install postgresql postgresql-contrib')
+    sudo('''psql -c "CREATE USER django WITH SUPERUSER PASSWORD 'djangopass';"''', user='postgres')
+    sudo('createdb photoapp', user='postgres')
 
 
 def install_postgres():
@@ -227,11 +227,13 @@ def deploy():
 def _deploy():
     rsync_project('~')
 
-    _install_python_reqs()
-    # sudo('export DJANGO_SETTINGS_MODULE=`pwd`/dev_settings.py')
-    sudo('python manage.py migrate')
-    sudo('mv nginx_config /etc/nginx/sites-available/default')
-    sudo('cp microblog.conf /etc/supervisor/conf.d')
+    with cd('DjangoApp'):
+        _install_python_reqs()
+        # sudo('export DJANGO_SETTINGS_MODULE=`pwd`/dev_settings.py')
+        sudo('python manage.py syncdb')
+        sudo('python manage.py migrate')
+        sudo('mv nginx_config /etc/nginx/sites-available/default')
+        sudo('cp photomanager.conf /etc/supervisor/conf.d')
 
     _restart_nginx()
     _restart_supervisor()
