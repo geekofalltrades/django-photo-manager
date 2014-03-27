@@ -1,0 +1,6 @@
+{% extends "PhotoManager/base.html" %}
+{% block page_title %}: Logged Out{% endblock %}
+{% block body %}
+{{ title }}
+<a href="{% url 'PhotoManager:pm-front' %}">Return to Front</a>
+{% endblock %}
