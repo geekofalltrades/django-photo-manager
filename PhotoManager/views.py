@@ -159,8 +159,9 @@ def create_photo_view(request):
 
     else:
         form = CreatePhotoForm()
-        context = {'form': form}
-        return render(request, 'PhotoManager/create_photo.html', context)
+
+    context = {'form': form}
+    return render(request, 'PhotoManager/create_photo.html', context)
 
 
 @login_required

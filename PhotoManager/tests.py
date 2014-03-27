@@ -418,7 +418,7 @@ class TestCreateAlbumView(TestCase):
         self.assertTemplateUsed('PhotoManager/create_album.html')
 
     def test_create_album_view_not_logged_in(self):
-        """Try to access the create photo view when not logged in and
+        """Try to access the create album view when not logged in and
         assert that we are redirected to the login view.
         """
         self.client.logout()
@@ -545,22 +545,65 @@ class TestModifyAlbumView(TestCase):
 
 class TestCreatePhotoView(TestCase):
     """Test the create photo view."""
+    fixtures = ['test_auth.json', 'test_photo_manager.json']
+
     def setUp(self):
         self.client = Client()
+        self.client.login(username='django', password='djangopass')
         self.url = "/pm/photo/create"
+        self.login_redirect = "/account/login/?next={}".format(self.url)
+
+    def test_create_photo_view_get(self):
+        """Send a GET request to the create photo view and insure that the
+        page is rendered as expected.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('PhotoManager/create_photo.html')
+
+    def test_create_photo_view_not_logged_in(self):
+        """Try to access the create photo view when not logged in and
+        assert that we are redirected to the login view.
+        """
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertRedirects(response, self.login_redirect)
+
+    def test_create_photo_view_elements(self):
+        """Assert that the required elements are present on the photo
+        creation page.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Create Photo', response.content)
+        self.assertIn('Return Home', response.content)
+        self.assertIn('Description:', response.content)
+        self.assertIn('Tags:', response.content)
+        self.assertIn('Image:', response.content)
 
     def test_create_photo(self):
-        """Create a new photo."""
-
-    def test_create_photo_bad_image(self):
-        """Attempt to create a photo using an image that doesn't exist and
-        assert that the operation fails.
+        """Create a new photo and assert that that photo exists and is
+        redirected to.
         """
+        form_data = {
+            'description': 'Real-Time Test Photo',
+            'image': File(open('test_image.jpg')),
+        }
+        response = self.client.post(self.url, form_data, follow=True)
+        self.assertIn('img', response.content)
+        self.assertIn(form_data['description'], response.content)
 
-    def test_create_photo_no_image(self):
-        """Try to create a photo without an image and assert that the
+    def test_create_photo_missing_image(self):
+        """Create an photo that's missing an image and assert that the
         operation fails.
         """
+        form_data = {
+            'description': 'Real-Time Test Photo',
+            'image': '',
+        }
+        response = self.client.post(self.url, form_data)
+        self.assertTemplateUsed('PhotoManager/create_photo.html')
+        self.assertIn(form_data['description'], response.content)
 
 
 class TestModifyPhotoView(TestCase):
