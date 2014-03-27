@@ -32,6 +32,15 @@ class EditPhotoForm(ModelForm):
 
 
 class AlbumForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        """Custom constructor that filters the queryset available to the
+        photos form to restrict it to the currently logged-in user.
+        """
+        authorized_user = kwargs.pop('authorized_user')
+        super(AlbumForm, self).__init__(*args, **kwargs)
+        self.fields['photos'].queryset = \
+            Photo.objects.filter(author=authorized_user)
+
     class Meta(object):
         model = Album
         fields = ['title', 'description', 'photos']
@@ -104,7 +113,7 @@ def create_album_view(request):
     details.
     """
     if request.method == 'POST':
-        form = AlbumForm(request.POST)
+        form = AlbumForm(request.POST, authorized_user=request.user)
         if form.is_valid():
             new_album = form.save(commit=False)
             new_album.author = request.user
@@ -115,7 +124,7 @@ def create_album_view(request):
             return HttpResponseRedirect(
                 reverse('PhotoManager:pm-album', args=[new_album.pk]))
     else:
-        form = AlbumForm()
+        form = AlbumForm(authorized_user=request.user)
 
     context = {'form': form}
     return render(request, 'PhotoManager/create_album.html', context)
@@ -132,14 +141,15 @@ def modify_album_view(request, id):
         return HttpResponseForbidden("403 Forbidden")
 
     if request.method == 'POST':
-        form = AlbumForm(request.POST, instance=album)
+        form = AlbumForm(
+            request.POST, instance=album, authorized_user=request.user)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(
                 reverse('PhotoManager:pm-album', args=[album.pk]))
 
     else:
-        form = AlbumForm(instance=album)
+        form = AlbumForm(instance=album, authorized_user=request.user)
 
     context = {'form': form, 'album': album}
     return render(request, 'PhotoManager/modify_album.html', context)
@@ -149,19 +159,24 @@ def modify_album_view(request, id):
 def create_photo_view(request):
     """View that allows the user to create a new photo."""
     if request.method == 'POST':
+        album = Album.objects.get(pk=request.POST['album'])
+        if album.author.pk != request.user.pk:
+            return HttpResponseForbidden("403 Forbidden")
+
         form = CreatePhotoForm(request.POST, request.FILES)
         if form.is_valid():
             new_photo = form.save(commit=False)
             new_photo.author = request.user
             new_photo.save()
-            return HttpResponseRedirect(
-                reverse('PhotoManager:pm-photo', args=[new_photo.pk]))
+            album.photos.add(new_photo)
+            album.save()
+
+        return HttpResponseRedirect(
+            reverse('PhotoManager:pm-modify_album', args=[album.pk]))
 
     else:
-        form = CreatePhotoForm()
-
-    context = {'form': form}
-    return render(request, 'PhotoManager/create_photo.html', context)
+        return HttpResponseNotAllowed(
+            ['POST'], content='405 Method Not Allowed')
 
 
 @login_required

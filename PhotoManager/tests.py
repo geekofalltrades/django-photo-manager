@@ -514,6 +514,10 @@ class TestModifyAlbumView(TestCase):
         self.assertIn('Photos:', response.content)
         self.assertIn(self.album.title, response.content)
         self.assertIn(self.album.description, response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Upload a new photo for this album:', response.content)
+        self.assertIn('Tags:', response.content)
+        self.assertIn('Image:', response.content)
 
     def test_modify_album_view_post(self):
         """Modify some details of an existing album and assert that the
@@ -550,60 +554,64 @@ class TestCreatePhotoView(TestCase):
     def setUp(self):
         self.client = Client()
         self.client.login(username='django', password='djangopass')
+        self.album = Album.objects.get(title="Test Album")
         self.url = "/pm/photo/create"
+        self.redirect = "/pm/album/modify/{}".format(self.album.pk)
         self.login_redirect = "/account/login/?next={}".format(self.url)
+        self.form_data = {
+            'description': 'Real-Time Test Photo',
+            'image': File(open('test_image.jpg')),
+            'album': self.album.pk
+        }
 
     def test_create_photo_view_get(self):
-        """Send a GET request to the create photo view and insure that the
-        page is rendered as expected.
+        """Send a GET request to the create photo view and ensure that we
+        receieve a method not allowed response.
         """
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed('PhotoManager/create_photo.html')
+        self.assertEqual(response.status_code, 405)
+        self.assertIn('405 Method Not Allowed', response.content)
 
     def test_create_photo_view_not_logged_in(self):
         """Try to access the create photo view when not logged in and
         assert that we are redirected to the login view.
         """
         self.client.logout()
-        response = self.client.get(self.url)
+        response = self.client.post(self.url, self.form_data)
         self.assertRedirects(response, self.login_redirect)
 
-    def test_create_photo_view_elements(self):
-        """Assert that the required elements are present on the photo
-        creation page.
+    def test_create_photo_view_wrong_user(self):
+        """Try to access the create photo view with an album id not
+        belonging to the user current logged in and assert that we receive
+        a forbidden response.
         """
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Create Photo', response.content)
-        self.assertIn('Return Home', response.content)
-        self.assertIn('Description:', response.content)
-        self.assertIn('Tags:', response.content)
-        self.assertIn('Image:', response.content)
+        self.client.logout()
+        self.client.login(username='layperson', password='laypass')
+        response = self.client.post(self.url, self.form_data)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn('403 Forbidden', response.content)
 
     def test_create_photo(self):
         """Create a new photo and assert that that photo exists and is
         redirected to.
         """
-        form_data = {
-            'description': 'Real-Time Test Photo',
-            'image': File(open('test_image.jpg')),
-        }
-        response = self.client.post(self.url, form_data, follow=True)
-        self.assertIn('img', response.content)
-        self.assertIn(form_data['description'], response.content)
+        response = self.client.post(self.url, self.form_data, follow=True)
+        self.assertRedirects(response, self.redirect)
+        Photo.objects.get(
+            description=self.form_data['description'])
 
     def test_create_photo_missing_image(self):
         """Create an photo that's missing an image and assert that the
         operation fails.
         """
-        form_data = {
-            'description': 'Real-Time Test Photo',
-            'image': '',
-        }
-        response = self.client.post(self.url, form_data)
-        self.assertTemplateUsed('PhotoManager/create_photo.html')
-        self.assertIn(form_data['description'], response.content)
+        self.form_data['image'] = ''
+        response = self.client.post(self.url, self.form_data)
+        self.assertRedirects(response, self.redirect)
+        self.assertRaises(
+            Photo.DoesNotExist,
+            Photo.objects.get,
+            description=self.form_data['description']
+        )
 
 
 class TestModifyPhotoView(TestCase):
