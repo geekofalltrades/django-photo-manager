@@ -227,12 +227,11 @@ def deploy():
 def _deploy():
     rsync_project('~')
 
-    with cd('FlaskMicroblog'):
-        _install_python_reqs()
-        sudo('export DJANGO_SETTINGS_MODULE=`pwd`/dev_settings.py')
-        sudo('python manage.py migrate')
-        sudo('mv nginx_config /etc/nginx/sites-available/default')
-        sudo('cp microblog.conf /etc/supervisor/conf.d')
+    _install_python_reqs()
+    # sudo('export DJANGO_SETTINGS_MODULE=`pwd`/dev_settings.py')
+    sudo('python manage.py migrate')
+    sudo('mv nginx_config /etc/nginx/sites-available/default')
+    sudo('cp microblog.conf /etc/supervisor/conf.d')
 
     _restart_nginx()
     _restart_supervisor()
