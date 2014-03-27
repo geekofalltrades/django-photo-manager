@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'registration',
     'sorl.thumbnail',
     'PhotoManager',
+    'gunicorn',
 )
 
 MIDDLEWARE_CLASSES = (
