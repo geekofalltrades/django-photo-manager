@@ -127,7 +127,7 @@ def update():
 
 
 def _install_dependencies():
-    sudo('apt-get -y install python-all-dev python-setuptools python-pip libpq-dev zlib1g-dev libjpeg-dev libmemcached-dev')
+    sudo('apt-get -y install python-all-dev python-setuptools python-pip libpq-dev zlib1g-dev libjpeg-dev memcached libmemcached-dev')
 
 
 def install_dependencies():

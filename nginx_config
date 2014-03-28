@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name ec2-54-186-200-193.us-west-2.compute.amazonaws.com/;
+    server_name http://ec2-54-186-228-189.us-west-2.compute.amazonaws.com/;
     access_log  /var/log/nginx/test.log;
 
     location / {
@@ -12,11 +12,11 @@ server {
 
     location /static {
         autoindex on;
-        alias /home/ubuntu/static;
+        alias /home/ubuntu/DjangoApp/static;
     }
 
     location /media {
         autoindex on;
-        alias /home/ubuntu/media;
+        alias /home/ubuntu/DjangoApp/media;
     }
 }
