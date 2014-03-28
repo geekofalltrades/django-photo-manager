@@ -1,11 +1,17 @@
 {% extends "PhotoManager/base.html" %}
+{% load bootstrap3 %}
 {% block page_title %}: Log In{% endblock %}
+{% block login_status %}{% endblock login_status %}
 {% block body %}
-<h1>Log In</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_table }}
-    <input type="submit" value="Log In" />
-</form>
-<a href="{% url 'PhotoManager:pm-front' %}">Return to Front</a>
-{% endblock %}
+<div class="navbar">
+    <a class="navitem" href="{% url 'PhotoManager:pm-front' %}">Return to Front</a>
+</div>
+<div class="form">
+    <h1>Log In</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form layout='inline' %}
+        <input type="submit" value="Log In" />
+    </form>
+</div>
+{% endblock body %}

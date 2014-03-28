@@ -1,11 +1,13 @@
 {% extends "PhotoManager/base.html" %}
+{% load bootstrap3 %}
 {% block page_title %}: Create New Album{% endblock %}
 {% block body %}
 <h1>Create Album</h1>
-<form method="POST" action="{% url 'PhotoManager:pm-create_album' %}">
-    {% csrf_token %}
-    {{ form.as_table }}
-    <input type="submit" />
-</form>
-<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
+<div class="form">
+    <form method="POST" action="{% url 'PhotoManager:pm-create_album' %}">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" />
+    </form>
+</div>
 {% endblock %}

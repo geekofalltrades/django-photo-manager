@@ -1,0 +1,52 @@
+.navbar {
+    background: #D0D0D0;
+    display: block;
+    margin: 10px 0px 10px 0px;
+    padding: 10px 10px 4px 10px;
+}
+
+.navitem {
+    float: left;
+    padding-right: 30px;
+}
+
+.content {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.form {
+    background: #D0D0D0;
+    display: block;
+    padding: 10px 10px 10px 10px;
+    margin-left: 400px;
+    margin-right: 400px;
+}
+
+.album {
+    display: block;
+    background: #D0D0D0;
+    margin: 20px auto;
+    padding: 5px 10px 5px 10px;
+    overflow: auto;
+}
+
+.photo {
+    display: inline;
+    float: left;
+    margin-right: 10px;
+}
+
+.tools {
+    float: right;
+}
+
+#edit {
+    float:left;
+    margin: auto;
+}
+
+#add {
+    float:right;
+    margin: auto;
+}

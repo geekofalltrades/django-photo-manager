@@ -1,6 +1,9 @@
 {% extends "PhotoManager/base.html" %}
 {% block page_title %}: Logged Out{% endblock %}
+{% block login_status %}{% endblock login_status %}
 {% block body %}
+<div class="navbar">
+    <a class="navitem" href="{% url 'PhotoManager:pm-front' %}">Return to Front</a>
+</div>
 {{ title }}
-<a href="{% url 'PhotoManager:pm-front' %}">Return to Front</a>
 {% endblock %}

@@ -1,19 +1,23 @@
 {% extends "PhotoManager/base.html" %}
+{% load bootstrap3 %}
 {% block page_title %}: Editing Photo{% endblock %}
 {% block body %}
-<h1>Edit Photo</h1>
-<form action="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_table }}
-    <input type="submit" value="Save Changes" />
-</form>
-<p>Or, create a new tag for this photo:</p>
-<form action="{% url 'PhotoManager:pm-create_tag' %}" method="POST">
-    {% csrf_token %}
-    {{ tag_form.as_table }}
-    <input type="hidden" name="photo" value="{{ photo.pk }}" />
-    <input type="submit" value="Create New Tag" />
-</form>
+<div class="form" id="edit">
+    <h1>Edit Photo</h1>
+    <form action="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Save Changes" />
+    </form>
+</div>
+<div class="form" id="add">
+    <p>Or, create a new tag for this photo:</p>
+    <form action="{% url 'PhotoManager:pm-create_tag' %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form tag_form %}
+        <input type="hidden" name="photo" value="{{ photo.pk }}" />
+        <input type="submit" value="Create New Tag" />
+    </form>
+</div>
 <a href="{% url 'PhotoManager:pm-photo' id=photo.pk %}">Return to Photo</a>
-<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}

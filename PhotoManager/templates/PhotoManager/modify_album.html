@@ -1,19 +1,23 @@
 {% extends "PhotoManager/base.html" %}
+{% load bootstrap3 %}
 {% block page_title %}: Editing {{ album.title }}{% endblock %}
 {% block body %}
-<h1>Edit Album</h1>
-<form action="{% url 'PhotoManager:pm-modify_album' id=album.pk %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_table }}
-    <input type="submit" value="Save Changes" />
-</form>
-<p>Upload a new photo for this album:</p>
-<form action="{% url 'PhotoManager:pm-create_photo' %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ photo_form.as_table }}
-    <input type="hidden" name="album" value="{{ album.pk }}" />
-    <input type="submit" value="Create Photo" />
-</form>
+<div class="form" id="edit">
+    <h1>Edit Album</h1>
+    <form action="{% url 'PhotoManager:pm-modify_album' id=album.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Save Changes" />
+    </form>
+</div>
+<div class="album" id="add">
+    <p>Upload a new photo for this album:</p>
+    <form action="{% url 'PhotoManager:pm-create_photo' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form photo_form %}
+        <input type="hidden" name="album" value="{{ album.pk }}" />
+        <input type="submit" value="Create Photo" />
+    </form>
+</div>
 <a href="{% url 'PhotoManager:pm-album' id=album.pk %}">Return to Album</a>
-<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}

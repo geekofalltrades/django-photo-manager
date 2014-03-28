@@ -2,21 +2,24 @@
 {% block page_title %}: Viewing Photo{% endblock %}
 {% block body %}
 <div class="photo">
-    <img src="{{ photo.image.url }}"></img>
-    <p>Description: {{ photo.description }}</p>
-    <p>Tags:</p>
-    <ul class="tags">
-    {% for tag in photo.tags.all %}
-        <li><a href="{% url 'PhotoManager:pm-tag' id=tag.pk %}">{{ tag.text }}</a></li>
-    {% endfor %}
-    </ul>
-    <p>Albums Containing This Photo:</p>
-    <ul class="albums">
-    {% for album in photo.album_set.all %}
-    <li><a href="{% url 'PhotoManager:pm-album' id=album.pk %}">{{ album.title }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="photo">
+        <img src="{{ photo.image.url }}"></img>
+    </div>
+    <div class="tools">
+        <a href="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}">Edit This Photo</a>
+        <p>Description: {{ photo.description }}</p>
+        <p>Tags:</p>
+        <ul class="tags">
+        {% for tag in photo.tags.all %}
+            <li><a href="{% url 'PhotoManager:pm-tag' id=tag.pk %}">{{ tag.text }}</a></li>
+        {% endfor %}
+        </ul>
+        <p>Albums Containing This Photo:</p>
+        <ul class="albums">
+        {% for album in photo.album_set.all %}
+        <li><a href="{% url 'PhotoManager:pm-album' id=album.pk %}">{{ album.title }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
 </div>
-<a href="{% url 'PhotoManager:pm-modify_photo' id=photo.pk %}">Edit This Photo</a>
-<a href="{% url 'PhotoManager:pm-home' %}">Return Home</a>
 {% endblock %}

@@ -1,20 +1,28 @@
+{% load bootstrap3 %}
+{% bootstrap_css %}
+
 <!DOCTYPE html>
 <head>
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css">
     <title>Photo Manager{% block page_title %}{% endblock %}</title>
 </head>
 <body>
 
 {% block login_status %}
-<div class="loginstatus">
+<div class="navbar">
 {% if user.is_authenticated %}
-    <p>Logged in as {{ user.username }} - <a href="{% url 'auth_logout' %}">Log Out</a></p>
+    <p class="navitem">Logged in as {{ user.username }} - <a href="{% url 'auth_logout' %}">Log Out</a></p>
 {% else %}
-    <p>Not logged in - <a href="{% url 'auth_login' %}">Log In</a> or <a href="{% url 'registration_register' %}">Register</a></p>
+    <p class="navitem">Not logged in - <a href="{% url 'auth_login' %}">Log In</a> or <a href="{% url 'registration_register' %}">Register</a></p>
 {% endif %}
+    <a class="navitem" href="{% url 'PhotoManager:pm-home' %}">Home</a>
+    <a class="navitem" href="{% url 'PhotoManager:pm-create_album' %}">Create New Album</a>
 </div>
 {% endblock %}
 
+<div class="content">
 {% block body %}{% endblock %}
+</div>
 
 </body>
 </html>
