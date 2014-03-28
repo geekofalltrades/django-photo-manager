@@ -106,8 +106,8 @@ def tag_view(request, id):
     return render(request, 'PhotoManager/tag.html', context)
 
 
-@permission_required('PhotoManager.add_album', raise_exception=True)
 @login_required
+@permission_required('PhotoManager.add_album', raise_exception=True)
 def create_album_view(request):
     """View that allows users to create an album.
     Presents the user with a form allowing them to initialize album
@@ -131,8 +131,8 @@ def create_album_view(request):
     return render(request, 'PhotoManager/create_album.html', context)
 
 
-@permission_required('PhotoManager.change_album', raise_exception=True)
 @login_required
+@permission_required('PhotoManager.change_album', raise_exception=True)
 def modify_album_view(request, id):
     """View that allows users to modify an album.
     Presents the user with a form allowing them to change the title or
@@ -158,8 +158,8 @@ def modify_album_view(request, id):
     return render(request, 'PhotoManager/modify_album.html', context)
 
 
-@permission_required('PhotoManager.add_photo', raise_exception=True)
 @login_required
+@permission_required('PhotoManager.add_photo', raise_exception=True)
 def create_photo_view(request):
     """View that allows the user to create a new photo."""
     if request.method == 'POST':
@@ -183,8 +183,8 @@ def create_photo_view(request):
             ['POST'], content='405 Method Not Allowed')
 
 
-@permission_required('PhotoManager.change_photo', raise_exception=True)
 @login_required
+@permission_required('PhotoManager.change_photo', raise_exception=True)
 def modify_photo_view(request, id):
     """View that allows the user to modify a photo."""
     photo = Photo.objects.get(pk=id)
@@ -206,8 +206,8 @@ def modify_photo_view(request, id):
     return render(request, 'PhotoManager/modify_photo.html', context)
 
 
-@permission_required('PhotoManager.add_tag', raise_exception=True)
 @login_required
+@permission_required('PhotoManager.add_tag', raise_exception=True)
 def create_tag_view(request):
     """View that allows the user to create a new tag.
     This view is only reachable from the modify photo view, and so redirects
