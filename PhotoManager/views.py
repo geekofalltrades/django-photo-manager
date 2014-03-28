@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.http import HttpResponseRedirect, HttpResponseForbidden, \
     HttpResponseNotAllowed
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from models import Tag, Photo, Album
 
 
@@ -106,6 +106,7 @@ def tag_view(request, id):
     return render(request, 'PhotoManager/tag.html', context)
 
 
+@permission_required('PhotoManager.add_album')
 @login_required
 def create_album_view(request):
     """View that allows users to create an album.
@@ -130,6 +131,7 @@ def create_album_view(request):
     return render(request, 'PhotoManager/create_album.html', context)
 
 
+@permission_required('PhotoManager.change_album')
 @login_required
 def modify_album_view(request, id):
     """View that allows users to modify an album.
@@ -156,6 +158,7 @@ def modify_album_view(request, id):
     return render(request, 'PhotoManager/modify_album.html', context)
 
 
+@permission_required('PhotoManager.add_photo')
 @login_required
 def create_photo_view(request):
     """View that allows the user to create a new photo."""
@@ -180,6 +183,7 @@ def create_photo_view(request):
             ['POST'], content='405 Method Not Allowed')
 
 
+@permission_required('PhotoManager.change_photo')
 @login_required
 def modify_photo_view(request, id):
     """View that allows the user to modify a photo."""
@@ -202,6 +206,7 @@ def modify_photo_view(request, id):
     return render(request, 'PhotoManager/modify_photo.html', context)
 
 
+@permission_required('PhotoManager.add_tag')
 @login_required
 def create_tag_view(request):
     """View that allows the user to create a new tag.
