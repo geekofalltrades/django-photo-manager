@@ -1,6 +1,8 @@
 from django.db import models
 from sorl.thumbnail import ImageField
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from registration.signals import user_activated
+from django.dispatch import receiver
 
 
 class Tag(models.Model):
@@ -51,3 +53,11 @@ class Album(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+@receiver(user_activated)
+def add_new_user_to_member_group(sender, **kwargs):
+    user = kwargs.pop['user']
+    group = Group.objects.get(name='Members')
+    user.groups.add(group)
+    user.save()
