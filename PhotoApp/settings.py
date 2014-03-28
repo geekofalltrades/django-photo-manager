@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'PhotoManager',
     'gunicorn',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
