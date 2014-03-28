@@ -92,10 +92,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_ROOT = '/home/geekofalltrades/Documents/CodeFellows/DjangoApp/media'
 MEDIA_URL = '/media/'
 
 #django-registration settings
