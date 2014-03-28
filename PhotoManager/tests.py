@@ -338,7 +338,7 @@ class TestAlbumView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(album.title, response.content)
         self.assertIn(album.description, response.content)
-        self.assertIn('preview', response.content)
+        self.assertIn('img', response.content)
 
 
 class TestPhotoView(TestCase):
@@ -387,16 +387,16 @@ class TestPhotoView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.photo.image.url, response.content)
-        self.assertIn('Description:', response.content)
+        self.assertIn('Description', response.content)
         self.assertIn(self.photo.description, response.content)
-        self.assertIn('Tags:', response.content)
+        self.assertIn('Tags', response.content)
         for tag in self.photo.tags.all():
             self.assertIn(tag.text, response.content)
         self.assertIn('Albums Containing This Photo:', response.content)
         for album in self.photo.album_set.all():
             self.assertIn(album.title, response.content)
         self.assertIn('Edit This Photo', response.content)
-        self.assertIn('Return Home', response.content)
+        self.assertIn('Home', response.content)
 
 
 class TestCreateAlbumView(TestCase):
@@ -432,10 +432,10 @@ class TestCreateAlbumView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertIn('Create Album', response.content)
-        self.assertIn('Return Home', response.content)
-        self.assertIn('Title:', response.content)
-        self.assertIn('Description:', response.content)
-        self.assertIn('Photos:', response.content)
+        self.assertIn('Home', response.content)
+        self.assertIn('Title', response.content)
+        self.assertIn('Description', response.content)
+        self.assertIn('Photos', response.content)
 
     def test_create_album(self):
         """Create a new album and assert that that album exists and is
@@ -507,17 +507,17 @@ class TestModifyAlbumView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertIn('Edit Album', response.content)
-        self.assertIn('Return Home', response.content)
+        self.assertIn('Home', response.content)
         self.assertIn('Return to Album', response.content)
-        self.assertIn('Title:', response.content)
-        self.assertIn('Description:', response.content)
-        self.assertIn('Photos:', response.content)
+        self.assertIn('Title', response.content)
+        self.assertIn('Description', response.content)
+        self.assertIn('Photos', response.content)
         self.assertIn(self.album.title, response.content)
         self.assertIn(self.album.description, response.content)
         self.assertEqual(response.status_code, 200)
         self.assertIn('Upload a new photo for this album:', response.content)
-        self.assertIn('Tags:', response.content)
-        self.assertIn('Image:', response.content)
+        self.assertIn('Tags', response.content)
+        self.assertIn('Image', response.content)
 
     def test_modify_album_view_post(self):
         """Modify some details of an existing album and assert that the
@@ -659,12 +659,12 @@ class TestModifyPhotoView(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertIn('Edit Photo', response.content)
-        self.assertIn('Return Home', response.content)
+        self.assertIn('Home', response.content)
         self.assertIn('Return to Photo', response.content)
-        self.assertIn('Description:', response.content)
-        self.assertIn('Tags:', response.content)
+        self.assertIn('Description', response.content)
+        self.assertIn('Tags', response.content)
         self.assertIn('Or, create a new tag for this photo', response.content)
-        self.assertIn('Text:', response.content)
+        self.assertIn('Text', response.content)
         self.assertIn(self.photo.description, response.content)
         for tag in self.photo.tags.all():
             self.assertIn(tag.text, response.content)

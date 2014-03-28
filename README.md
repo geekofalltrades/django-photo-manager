@@ -5,3 +5,5 @@ Django Photo Manager
 This is a simple web app that allows users to update and manage their
 photos. Photos may be arranged into albums and tagged with customizable
 tags.
+
+It isn't pretty. Me back-end developer, no front-end designer.
