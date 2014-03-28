@@ -106,7 +106,7 @@ def tag_view(request, id):
     return render(request, 'PhotoManager/tag.html', context)
 
 
-@permission_required('PhotoManager.add_album')
+@permission_required('PhotoManager.add_album', raise_exception=True)
 @login_required
 def create_album_view(request):
     """View that allows users to create an album.
@@ -131,7 +131,7 @@ def create_album_view(request):
     return render(request, 'PhotoManager/create_album.html', context)
 
 
-@permission_required('PhotoManager.change_album')
+@permission_required('PhotoManager.change_album', raise_exception=True)
 @login_required
 def modify_album_view(request, id):
     """View that allows users to modify an album.
@@ -158,7 +158,7 @@ def modify_album_view(request, id):
     return render(request, 'PhotoManager/modify_album.html', context)
 
 
-@permission_required('PhotoManager.add_photo')
+@permission_required('PhotoManager.add_photo', raise_exception=True)
 @login_required
 def create_photo_view(request):
     """View that allows the user to create a new photo."""
@@ -183,7 +183,7 @@ def create_photo_view(request):
             ['POST'], content='405 Method Not Allowed')
 
 
-@permission_required('PhotoManager.change_photo')
+@permission_required('PhotoManager.change_photo', raise_exception=True)
 @login_required
 def modify_photo_view(request, id):
     """View that allows the user to modify a photo."""
@@ -206,7 +206,7 @@ def modify_photo_view(request, id):
     return render(request, 'PhotoManager/modify_photo.html', context)
 
 
-@permission_required('PhotoManager.add_tag')
+@permission_required('PhotoManager.add_tag', raise_exception=True)
 @login_required
 def create_tag_view(request):
     """View that allows the user to create a new tag.
