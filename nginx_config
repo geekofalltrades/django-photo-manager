@@ -16,7 +16,6 @@ server {
     }
 
     location /media {
-        autoindex on;
-        alias /home/ubuntu/DjangoApp/media;
+        proxy_pass http://cfphotomanager.s3.amazonaws.com/media;
     }
 }

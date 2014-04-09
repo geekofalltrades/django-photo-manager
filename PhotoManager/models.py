@@ -57,7 +57,7 @@ class Album(models.Model):
 
 @receiver(user_activated)
 def add_new_user_to_member_group(sender, **kwargs):
-    user = kwargs.pop['user']
+    user = kwargs.pop('user')
     group = Group.objects.get(name='Members')
     user.groups.add(group)
     user.save()
